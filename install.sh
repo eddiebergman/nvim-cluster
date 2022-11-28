@@ -59,6 +59,7 @@ if isfile "$HOME/.vimrc"; then
 fi
 
 conda create -y -p "$CONDA_ENV" python="$CONDA_PYTHON_VERSION"
+nvim --headless -c 'call mkdir(stdpath("config"), "p") | exe "edit" stdpath("config") . "/init.lua" | write | quit'
 
 echo "To launch, use ${bin_location}/nvim"
 echo "Or add the following to your .bashrc"
