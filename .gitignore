@@ -1,0 +1,4 @@
+*.tar.gz
+Miniconda3-latest*
+nvim-linux64
+.nvim-python-venv
