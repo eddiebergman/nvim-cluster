@@ -1,29 +1,26 @@
--- This is where plugins can be loaded with packer
---
---      https://github.com/wbthomason/packer.nvim
---
--- Using `<leader>fmi` will fold on indent, might make it easier
-
--- It's worth noting that it's common in neovim setups to define a table (python dict)
--- called M and just add things on to it, returning it at the end of the file
--- Use `G` to have a look with `gg` or `<c-o>` to get back to the top
 local M = {}
-
--- All plugins are going to be located here
--- For now, we are going to just install a theme, and edit our settings to use it 
--- Make sure you set `false` to true in `init.lua`, restart `nvim` and run
---    `:PackerSync`, don't forget about tab complete!
--- You can always run `:Packaer<tab>` and check out `:PackerStatus` to see your installed plugins
--- To remove one, just remove it from here and repeat the same steps
-
--- To progress, just run ":!git checkout t2"
 
 function plugins(use)
     use 'wbthomason/packer.nvim'
 
-    -- Themes
     -- https://github.com/topics/neovim-colorscheme?o=desc&s=stars
     use 'folke/tokyonight.nvim'
+
+
+    -- Just press x three times on the start of each comment to uncomment each of these
+    -- Plugins can have dependancies (`requires`) and `config` which is a file loaded that
+    -- for the plugin.
+    -- use {
+    --     'nvim-telescope/telescope.nvim',
+    --      requires = { 'nvim-lua/plenary.nvim', { 'nvim-telescope/telescope-fzf-native.nvim', run = 'make' } },
+    --      config = function() require('config/telescope').setup(true) end
+    -- }
+ 
+    -- use {
+    --     'kyazdani42/nvim-tree.lua',
+    --     requires = "kyazdani42/nvim-web-devicons",
+    --     config = function() require("config/nvim-tree").setup(true) end
+    -- }
 end
 
 function M.setup(active)

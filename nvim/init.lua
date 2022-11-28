@@ -1,57 +1,19 @@
--- This walkthrough will walk you through all the different
--- parts of this setup and slowly walk you through setting
--- up plugins so it's not so overwhelming at first.
--- Feel free to delete comment blocks as you go
--- 
--- `d}` - Delete until the end block of code
--- `d{` - Delete from curos up to start of block
--- `<shift-d>` - Delete line, dont get rid of blank line
-
--- You'll likely want to be familiar with <C-o> for going back
-
-vim.cmd("colo habamax") -- One of the least offensive deafult color schemes -_-
-
--- Run `:set foldmethod=marker` and then zM` just to fold everything
--- up so it's less cluttered. We'll make it easier and better later
-
--- To have an easier time navigating around, here's
--- <Alt-j> and <Alt-k> to move a block at a time
-vim.cmd("nnoremap <A-k> {")
-vim.cmd("nnoremap <A-j> }")
-
--- You can still call any vim commands you had before with `vim.cmd`
--- This makes <space> fold and unfold
-vim.cmd("nnoremap <space> za")
-
--- {{{ Unfold me
--- Here's the lua equivalent, it's more terse but more programmable
-vim.api.nvim_set_keymap("n", "<space>", "za", { noremap = true })
--- }}}
-
--- Nvim is configured through lua, a language which consists of
--- modules, control flow and tables (dicts/lists), no classes (kinda)
--- Find a comprehensive walk through here:
--- https://github.com/nanotee/nvim-lua-guide
--- An example of a simple lua function taking in a dictionary
--- we'll use to simplify setting keymaps
-
--- @param opts (table): {key=..., cmd=..., mode=..., opts=...}
-function setkey(opts)
-    key = opts.key 
-    cmd = opts.cmd
-    mode = opts.mode or "n"
-    extra = opts.opts or { noremap = true }
-    vim.api.nvim_set_keymap(mode, key, cmd, extra)
-end
-
+-- This time around, we'll focus on two plugins to navigate around a lot easier
+-- using the `:commands` are frustrating and meh
+-- The two plugins we'll install are
+--
+--    Telescope: A Fuzzy picker with a lot of built in lists to pick from
+--      - https://github.com/nvim-telescope/telescope.nvim
+--
+--    NvimTree: A typical ide tree
+--      - https://github.com/nvim-tree/nvim-tree.lua 
+--
+-- For hopefully the last time, navigate to `e: nvim/lua/plugins.lua`
 -- {{{ Settings
 -- Choose your fighter...
 vim.g.mapleader = ","
 
--- Take these for granted, or go through as you like
--- Settings, see :help 'setting'
--- ...or `<leader>h setting`
-setkey({ key="<leader>h", cmd=":vert bo help " })
+vim.cmd("colo tokyonight-storm")
 
 vim.cmd([[filetype plugin indent on]])
 
@@ -98,8 +60,6 @@ vim.o.foldexpr="nvim_treesitter#foldexpr()" -- We'll see this later
 vim.cmd([[ set foldopen-=block ]])
 vim.cmd([[ set foldcolumn=0 ]])  -- Not sure why this doesn't work with `vim.o`
 -- }}}
-
-
 -- {{{ Autocommands
 -- Just going to assume you know what autocommands are
 -- All you need to know is that it highlights when you're in insert mode
@@ -111,13 +71,28 @@ vim.api.nvim_create_autocmd("InsertLeave",
     { group = "InsertCursor", command = "hi CursorLine gui=NONE", }
 )
 -- }}}
-
--- I set some basic keymaps I like to use here, feel free to modify them
 -- {{{ Keymaps
+function setkey(opts)
+    key = opts.key 
+    cmd = opts.cmd
+    mode = opts.mode or "n"
+    extra = opts.opts or { noremap = true }
+    vim.api.nvim_set_keymap(mode, key, cmd, extra)
+end
+
+-- Quick help
+setkey({ key="<leader>h", cmd=":vert bo help " })
 
 -- Move to start/end of line
 setkey({ key="H", cmd="^" })
 setkey({ key="L", cmd="$" })
+
+-- Move up and down a block at a time
+setkey("nnoremap <A-k> {")
+setkey("nnoremap <A-j> }")
+
+-- Toggle fold
+setkey("nnoremap <space> za")
 
 -- Close current buffer
 setkey({ key="Q", cmd=":bp<bar>sp<bar>bn<bar>bd<CR>", opts={ noremap = true, silent=true }}) 
@@ -153,10 +128,6 @@ setkey({ key="<leader>ev", cmd=":e $MYVIMRC<CR>" })
 -- setkey({ key="<up>", cmd="<nop>" })
 -- setkey({ key="<down>", cmd="<nop>" })
 -- }}}
-
--- So far nothing special, now we get to where neovim can shine!
--- We'll start by getting the plugin manager up and running to help us navigate files
-
--- Change the setup to true and use `:e lua/<tab>` and select `plugins.lua`
--- Also be aware of ":vsp" and "<crtl-w><ctr-l>" to move to the left window
+-- {{{ Modules
 local plugins = require("plugins").setup(true)
+-- }}}
