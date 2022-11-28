@@ -88,11 +88,11 @@ setkey({ key="H", cmd="^" })
 setkey({ key="L", cmd="$" })
 
 -- Move up and down a block at a time
-setkey("nnoremap <A-k> {")
-setkey("nnoremap <A-j> }")
+setkey({ key="<A-k>", cmd="{" })
+setkey({ key="<A-j>", cmd="}" })
 
 -- Toggle fold
-setkey("nnoremap <space> za")
+setkey({ key="<space>", cmd="za"})
 
 -- Close current buffer
 setkey({ key="Q", cmd=":bp<bar>sp<bar>bn<bar>bd<CR>", opts={ noremap = true, silent=true }}) 
