@@ -159,4 +159,4 @@ setkey({ key="<leader>ev", cmd=":e $MYVIMRC<CR>" })
 
 -- Change the setup to true and use `:e lua/<tab>` and select `plugins.lua`
 -- Also be aware of ":vsp" and "<crtl-w><ctr-l>" to move to the left window
-local plugins = require("plugins").setup(true)
+local plugins = require("plugins").setup(false)
