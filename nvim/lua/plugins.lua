@@ -1,5 +1,12 @@
 local M = {}
 
+--
+-- Time again to :PackerSync and restart
+-- Once you've run this and restarted
+--
+--      hit `<leader>ff` for [f]ind [f]ile,
+--
+-- Then look up the config files `config/telescope.lua` and `config/nvim-tree.lua`
 function plugins(use)
     use 'wbthomason/packer.nvim'
 
@@ -7,20 +14,19 @@ function plugins(use)
     use 'folke/tokyonight.nvim'
 
 
-    -- Just press x three times on the start of each comment to uncomment each of these
-    -- Plugins can have dependancies (`requires`) and `config` which is a file loaded that
-    -- for the plugin.
-    -- use {
-    --     'nvim-telescope/telescope.nvim',
-    --      requires = { 'nvim-lua/plenary.nvim', { 'nvim-telescope/telescope-fzf-native.nvim', run = 'make' } },
-    --      config = function() require('config/telescope').setup(true) end
-    -- }
+    -- Telescope 
+    use {
+        'nvim-telescope/telescope.nvim',
+         requires = { 'nvim-lua/plenary.nvim', { 'nvim-telescope/telescope-fzf-native.nvim', run = 'make' } },
+         config = function() require('config/telescope').setup(true) end
+    }
  
-    -- use {
-    --     'kyazdani42/nvim-tree.lua',
-    --     requires = "kyazdani42/nvim-web-devicons",
-    --     config = function() require("config/nvim-tree").setup(true) end
-    -- }
+    -- Nvim tree
+    use {
+        'kyazdani42/nvim-tree.lua',
+        requires = "kyazdani42/nvim-web-devicons",
+        config = function() require("config/nvim-tree").setup(true) end
+    }
 end
 
 function M.setup(active)

@@ -72,13 +72,7 @@ vim.api.nvim_create_autocmd("InsertLeave",
 )
 -- }}}
 -- {{{ Keymaps
-function setkey(opts)
-    key = opts.key 
-    cmd = opts.cmd
-    mode = opts.mode or "n"
-    extra = opts.opts or { noremap = true }
-    vim.api.nvim_set_keymap(mode, key, cmd, extra)
-end
+local setkey = require("util").setkey
 
 -- Quick help
 setkey({ key="<leader>h", cmd=":vert bo help " })
