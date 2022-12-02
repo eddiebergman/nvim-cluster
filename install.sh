@@ -96,9 +96,9 @@ isfile "$HOME/.vimrc" && cp "$HOME/.vimrc" "$BACKUP_VIMRC"
 cp "$NVIM_BINARY" "${BIN_DIR}/nvim"
 cp "$TREESITTER_BINARY" "${BIN_DIR}/tree-sitter"
 
-CONFIG_DIR="$HOME/.config/nvim"
-NVIM_CONFIG_PATH="$HOME/.config/nvim"
-NVIM_BACKUP_CONFIG_PATH="$HOME/.config/nvim.backup"
+CONFIG_DIR="$HOME/.config"
+NVIM_CONFIG_PATH="$CONFIG_DIR/nvim"
+NVIM_BACKUP_CONFIG_PATH="$CONFIG_DIR/nvim.backup"
 MOVED_NVIM_CONFIG_DIR=0
 
 # Back up the nvim config dir if it exists
@@ -108,8 +108,8 @@ if isdir "$NVIM_CONFIG_PATH"; then
 fi
 
 # Link in the config from the repo
-ln -s "$REPO_NVIM_CONFIG" "$NVIM_CONFIG_PATH"
-$NVIM_BINARY --headless -c 'autocmd User PackerComplete quitall' -c 'PackerSync'
+ln -s "$REPO_NVIM_CONFIG" "$CONFIG_DIR"
+$NVIM_BINARY --headless -c 'autocmd User PackerComplete quitall' -c 'PackerSync | quit'
 
 
 print_addpath () {
