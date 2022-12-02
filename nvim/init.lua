@@ -1,14 +1,3 @@
--- This time around, we'll focus on two plugins to navigate around a lot easier
--- using the `:commands` are frustrating and meh
--- The two plugins we'll install are
---
---    Telescope: A Fuzzy picker with a lot of built in lists to pick from
---      - https://github.com/nvim-telescope/telescope.nvim
---
---    NvimTree: A typical ide tree
---      - https://github.com/nvim-tree/nvim-tree.lua 
---
--- For hopefully the last time, navigate to `e: nvim/lua/plugins.lua`
 -- {{{ Settings
 -- Choose your fighter...
 vim.g.mapleader = ","
@@ -43,6 +32,8 @@ vim.o.shiftwidth = 0
 vim.o.showmode = false
 vim.o.signcolumn = "yes:2"
 vim.o.smartcase = true
+vim.o.smartindent = true
+vim.o.autoindent = true
 vim.o.spelloptions = "noplainbuffer"
 vim.o.splitbelow = true
 vim.o.splitright = true
@@ -51,14 +42,107 @@ vim.o.tabstop = 2
 vim.o.termguicolors = true
 vim.o.textwidth = 120
 vim.o.undodir = vim.fn.expand("~/.cache/nvim/undodir")
+vim.o.updatetime = 1000 -- Time for diagnostics to popup on cursor hold
 vim.o.undofile = true
 vim.o.viewoptions = "cursor,folds,slash,unix"
 vim.o.wrap = false
-vim.o.foldmarker="{{{,}}}"
-vim.o.foldmethod="expr"
-vim.o.foldexpr="nvim_treesitter#foldexpr()" -- We'll see this later
+vim.o.foldmarker = "{{{,}}}"
+vim.o.foldmethod = "expr"
+vim.o.foldexpr = "nvim_treesitter#foldexpr()" -- We'll see this later
 vim.cmd([[ set foldopen-=block ]])
-vim.cmd([[ set foldcolumn=0 ]])  -- Not sure why this doesn't work with `vim.o`
+vim.cmd([[ set foldcolumn=0 ]]) -- Not sure why this doesn't work with `vim.o`
+-- }}}
+-- {{{ Modules
+require("plugins").setup() -- Keep this first
+require("lsp").setup()
+-- }}}
+-- {{{ Keymaps
+local setkey = require("util").setkey
+local command = require("util").command
+
+-- Quick help
+setkey({ key = "<leader>h", cmd = ":vert bo help " })
+
+-- Move to start/end of line
+setkey({ key = "H", cmd = "^" })
+setkey({ key = "L", cmd = "$" })
+
+-- Move up and down a block at a time
+setkey({ key = "<A-k>", cmd = "{" })
+setkey({ key = "<A-j>", cmd = "}" })
+
+-- Smart selection <A-l>, <A-h>
+-- Unfortunatly this has to be done in `config/treesitter`
+
+-- Toggle fold
+setkey({ key = "<space>", cmd = "za" })
+
+-- Close current buffer
+setkey({ key = "Q", cmd = ":bp<bar>sp<bar>bn<bar>bd<CR>", opts = { noremap = true, silent = true } })
+
+-- Cycle buffers
+setkey({ key = "<Tab>", cmd = ":bnext<cr>" })
+setkey({ key = "<S-Tab>", cmd = ":bnext<cr>" })
+
+-- Toggle search highlight
+setkey({ key = "<leader><space>", cmd = ":set hlsearch!<CR>" })
+
+-- Makes search use magic-mode `<leader>h /magic`
+setkey({ key = "/", cmd = "/\\v" })
+
+-- This makes `jk` while in insert/visual/terminal mode act as escape,
+-- much easier than reaching for esc, try it out!
+setkey({ mode = "i", key = "jk", cmd = "<esc>" })
+setkey({ mode = "v", key = "jk", cmd = "<esc>" })
+setkey({ mode = "t", key = "jk", cmd = "<c-\\><c-n>" })
+
+-- Just because we sometimes want to toggle these around
+setkey({ key = "<leader>fmm", cmd = ":set foldmethod=marker<CR>" })
+setkey({ key = "<leader>fmi", cmd = ":set foldmethod=indent<CR>" })
+setkey({ key = "<leader>fme", cmd = ":set foldmethod=expr<CR>" })
+
+-- [e]dit [v]imrc
+setkey({ key = "<leader>ev", cmd = ":e $MYVIMRC<CR>" })
+
+-- Only if you're feeling spicy, all hotkeys through the tutorial
+-- won't use them
+-- setkey({ key="<left>", cmd="<nop>" })
+-- setkey({ key="<right>", cmd="<nop>" })
+-- setkey({ key="<up>", cmd="<nop>" })
+-- setkey({ key="<down>", cmd="<nop>" })
+
+
+command({
+    name = "Format",
+    cmd = function() vim.lsp.buf.format() end,
+    key = "<C-f>"
+})
+
+command({
+    name = "Rename",
+    cmd = function() vim.lsp.buf.rename() end,
+    key = "<leader>r"
+})
+
+command({
+    name = "Definition",
+    cmd = function() vim.lsp.buf.hover() end,
+    key = "<leader>sd"
+})
+
+command({
+    name = "CodeActions",
+    cmd = function() vim.lsp.buf.code_action() end,
+    key = "<A-cr>"
+})
+
+command({
+    name = "LineErrors",
+    cmd = function() vim.diagnostic.open_float() end,
+    key = "<leader>se"
+})
+
+
 -- }}}
 -- {{{ Autocommands
 -- Just going to assume you know what autocommands are
@@ -71,57 +155,4 @@ vim.api.nvim_create_autocmd("InsertLeave",
     { group = "InsertCursor", command = "hi CursorLine gui=NONE", }
 )
 -- }}}
--- {{{ Keymaps
-local setkey = require("util").setkey
-
--- Quick help
-setkey({ key="<leader>h", cmd=":vert bo help " })
-
--- Move to start/end of line
-setkey({ key="H", cmd="^" })
-setkey({ key="L", cmd="$" })
-
--- Move up and down a block at a time
-setkey({ key="<A-k>", cmd="{" })
-setkey({ key="<A-j>", cmd="}" })
-
--- Toggle fold
-setkey({ key="<space>", cmd="za"})
-
--- Close current buffer
-setkey({ key="Q", cmd=":bp<bar>sp<bar>bn<bar>bd<CR>", opts={ noremap = true, silent=true }}) 
-
--- Cycle buffers
-setkey({ key="<Tab>", cmd=":bnext<cr>" })
-setkey({ key="<S-Tab>", cmd=":bnext<cr>" })
-
--- Toggle search highlight
-setkey({ key="<leader><space>", cmd=":set hlsearch!<CR>" })
-
--- Makes search use magic-mode `<leader>h /magic`
-setkey({ key="/", cmd="/\\v" })
-
--- This makes `jk` while in insert/visual/terminal mode act as escape,
--- much easier than reaching for esc, try it out!
-setkey({ mode="i", key="jk", cmd="<esc>" })
-setkey({ mode="v", key="jk", cmd="<esc>" })
-setkey({ mode="t", key="jk", cmd="<c-\\><c-n>" })
-
--- Just because we sometimes want to toggle these around
-setkey({ key="<leader>fmm", cmd=":set foldmethod=marker<CR>" } )
-setkey({ key="<leader>fmi", cmd=":set foldmethod=indent<CR>" } )
-setkey({ key="<leader>fme", cmd=":set foldmethod=expr<CR>" } )
-
--- [e]dit [v]imrc
-setkey({ key="<leader>ev", cmd=":e $MYVIMRC<CR>" })
-
--- Only if you're feeling spicy, all hotkeys through the tutorial
--- won't use them
--- setkey({ key="<left>", cmd="<nop>" })
--- setkey({ key="<right>", cmd="<nop>" })
--- setkey({ key="<up>", cmd="<nop>" })
--- setkey({ key="<down>", cmd="<nop>" })
--- }}}
--- {{{ Modules
-local plugins = require("plugins").setup(true)
--- }}}
+-- vim:foldmethod=marker

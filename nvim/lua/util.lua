@@ -1,10 +1,10 @@
 local M = {}
 
 function M.setkey(opts)
-    key = opts.key 
-    cmd = opts.cmd
-    mode = opts.mode or "n"
-    extra = opts.opts or { noremap = true }
+    local key = opts.key
+    local cmd = opts.cmd
+    local mode = opts.mode or "n"
+    local extra = opts.opts or { noremap = true }
     vim.api.nvim_set_keymap(mode, key, cmd, extra)
 end
 

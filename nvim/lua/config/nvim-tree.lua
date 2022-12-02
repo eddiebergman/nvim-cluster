@@ -153,10 +153,7 @@ local toggle_tree = {
     key = "<C-h>",
 }
 
-function M.setup(active)
-    if not active then
-        return
-    end
+function M.setup()
     require('nvim-tree').setup(config)
     util.command(toggle_tree)
 

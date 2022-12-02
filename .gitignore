@@ -3,3 +3,6 @@ Miniconda3-latest*
 nvim-linux64
 .nvim-python-venv
 packer_compiled.lua
+.luarc.json
+bin
+tree-sitter

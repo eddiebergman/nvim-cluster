@@ -2,6 +2,7 @@
 local M = {}
 local telescope = require("telescope")
 local util = require("util") -- This is in `lua/util` and just where I'll put utility things
+local builtin = require("telescope.builtin")
 
 -- Also type `:Telescope` and `<tab>` to autocomplete and see what else it can do
 -- A particularly meta one is `:Telescope builtin` which lets you pick from all the
@@ -47,11 +48,7 @@ local go_definition = {
 }
 
 
-function M.setup(active)
-    if not active then
-        return
-    end
-    -- If we define any setup, it would go here
+function M.setup()
     telescope.setup()
 
     for _, cmd in ipairs(
