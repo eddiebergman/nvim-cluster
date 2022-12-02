@@ -108,7 +108,7 @@ if isdir "$NVIM_CONFIG_PATH"; then
 fi
 
 # Link in the config from the repo
-ln -s "$REPO_NVIM_CONFIG" "$CONFIG_DIR"
+ln -sfn "$REPO_NVIM_CONFIG" "$CONFIG_DIR"
 
 print_addpath () {
     echo "export PATH=\"\${PATH}:${1}\""
