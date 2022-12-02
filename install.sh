@@ -107,7 +107,7 @@ if isdir "$NVIM_CONFIG_PATH"; then
 fi
 
 $NVIM_BINARY --headless -c 'call mkdir(stdpath("config"), "p") | exe "edit" stdpath("config") . "/init.lua" | write | quit'
-
+$NVIM_BINARY --headless -c 'autocmd User PackerComplete quitall' -c 'PackerSync'
 
 
 print_addpath () {
