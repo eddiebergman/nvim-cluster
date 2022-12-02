@@ -109,8 +109,6 @@ fi
 
 # Link in the config from the repo
 ln -s "$REPO_NVIM_CONFIG" "$CONFIG_DIR"
-$NVIM_BINARY --headless -c 'autocmd User PackerComplete quitall' -c 'PackerSync | quit'
-
 
 print_addpath () {
     echo "export PATH=\"\${PATH}:${1}\""
