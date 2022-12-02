@@ -1,6 +1,7 @@
 #!/bin/sh
 GITHUB_LINK="https://github.com/eddiebergman/nvim-cluster.git"
 REPO_DIR="$(pwd)/nvim-cluster"
+REPO_NVIM_CONFIG="$(pwd)/nvim"
 
 CONDA_PYTHON_VERSION="3.10"
 CONDA_LINK="https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh"
@@ -100,13 +101,14 @@ NVIM_CONFIG_PATH="$HOME/.config/nvim"
 NVIM_BACKUP_CONFIG_PATH="$HOME/.config/nvim.backup"
 MOVED_NVIM_CONFIG_DIR=0
 
-
+# Back up the nvim config dir if it exists
 if isdir "$NVIM_CONFIG_PATH"; then
     mv "$NVIM_CONFIG_PATH" "$NVIM_BACKUP_CONFIG_PATH"
     MOVED_NVIM_CONFIG_DIR=1
 fi
 
-$NVIM_BINARY --headless -c 'call mkdir(stdpath("config"), "p") | exe "edit" stdpath("config") . "/init.lua" | write | quit'
+# Link in the config from the repo
+ln -s "$REPO_NVIM_CONFIG" "$NVIM_CONFIG_PATH"
 $NVIM_BINARY --headless -c 'autocmd User PackerComplete quitall' -c 'PackerSync'
 
 
