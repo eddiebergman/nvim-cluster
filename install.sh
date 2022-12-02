@@ -53,6 +53,15 @@ if ! command -v "conda" > /dev/null; then
     fi
 fi
 
+# Create a virtual environemtn nvim can run from
+if ! isdir "$CONDA_ENV"; then
+    if command -v "conda"; then
+        conda create -y -p "$CONDA_ENV" python="$CONDA_PYTHON_VERSION"
+    else
+        $CONDA_EXC create -y -p "$CONDA_ENV" python="$CONDA_PYTHON_VERSION"
+    fi
+fi
+
 # We need a more up to date version of npm and node for some neovim things
 # This will actually replace the default node/npm on the cluster on your path
 if ! command -v "nvm" > /dev/null; then
@@ -86,7 +95,17 @@ isfile "$HOME/.vimrc" && cp "$HOME/.vimrc" "$BACKUP_VIMRC"
 cp "$NVIM_BINARY" "${BIN_DIR}/nvim"
 cp "$TREESITTER_BINARY" "${BIN_DIR}/tree-sitter"
 
-isdir "$CONDA_ENV" || conda create -y -p "$CONDA_ENV" python="$CONDA_PYTHON_VERSION"
+CONFIG_DIR="$HOME/.config/nvim"
+NVIM_CONFIG_PATH="$HOME/.config/nvim"
+NVIM_BACKUP_CONFIG_PATH="$HOME/.config/nvim.backup"
+MOVED_NVIM_CONFIG_DIR=0
+
+
+if isdir "$NVIM_CONFIG_PATH"; then
+    mv "$NVIM_CONFIG_PATH" "$NVIM_BACKUP_CONFIG_PATH"
+    MOVED_NVIM_CONFIG_DIR=1
+fi
+
 $NVIM_BINARY --headless -c 'call mkdir(stdpath("config"), "p") | exe "edit" stdpath("config") . "/init.lua" | write | quit'
 
 
@@ -100,15 +119,15 @@ ZSHRC_FILE="$HOME/.zshrc"
 rc_files=("$BASHRC_FILE" "$ZSHRC_FILE")
 
 for rc_file in "${rc_files[@]}"; do
-  if isfile "$rc_file"; then
-      echo "# From nvim-cluster"
-      echo "# ----------------"
-      print_addpath "$BIN_DIR" >> "$BASHRC_FILE"
-      echo "# ----------------"
+    if isfile "$rc_file"; then
+        echo "# From nvim-cluster"
+        echo "# ----------------"
+        print_addpath "$BIN_DIR" >> "$BASHRC_FILE"
+        echo "# ----------------"
 
-      echo "Added the following lines to your $(basename "${rc_file}") at"
-      echo " - $BASHRC_FILE"
-      print_addpath "$BIN_DIR"
-      echo "export PATH=\"{PATH}:${HOME}\""
-  fi
+        echo "Added the following lines to your $(basename "${rc_file}") at"
+        echo " - $BASHRC_FILE"
+        print_addpath "$BIN_DIR"
+        echo "export PATH=\"{PATH}:${HOME}\""
+    fi
 done
