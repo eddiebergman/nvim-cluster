@@ -26,6 +26,10 @@ local function edit_or_open()
     local action = "edit"
     local node = lib.get_node_at_cursor()
 
+    if node  == nil then
+        return
+    end
+
     -- Just copy what's done normally with vsplit
     if node.link_to and not node.nodes then
         require('nvim-tree.actions.node.open-file').fn(action, node.link_to)
@@ -45,6 +49,10 @@ local function vsplit_preview()
     -- open as vsplit on current node
     local action = "vsplit"
     local node = lib.get_node_at_cursor()
+
+    if node  == nil then
+        return
+    end
 
     -- Just copy what's done normally with vsplit
     if node.link_to and not node.nodes then
@@ -147,16 +155,9 @@ local config = {
     }
 }
 
-local toggle_tree = {
-    name = "ToggleTree",
-    cmd = "NvimTreeToggle",
-    key = "<C-h>",
-}
 
 function M.setup()
     require('nvim-tree').setup(config)
-    util.command(toggle_tree)
-
     vim.cmd([[
         autocmd BufEnter * ++nested if winnr('$') == 1 && bufname() == 'NvimTree_' . tabpagenr() | quit | endif
     ]])

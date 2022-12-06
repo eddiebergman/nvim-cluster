@@ -1,65 +1,41 @@
 -- https://github.com/nvim-telescope/telescope.nvim
 local M = {}
 local telescope = require("telescope")
-local util = require("util") -- This is in `lua/util` and just where I'll put utility things
-local builtin = require("telescope.builtin")
+local themes = require("telescope.themes")
+local actions = require("telescope.actions")
+local trouble = require("trouble.providers.telescope")
 
--- Also type `:Telescope` and `<tab>` to autocomplete and see what else it can do
--- A particularly meta one is `:Telescope builtin` which lets you pick from all the
--- other pickers
-local find_file = {
-    name = "FindFile",
-    cmd = "Telescope find_files",
-    key = "<leader>ff",
-}
-local find_text = {
-    name = "FindText",
-    cmd = "Telescope live_grep",
-    key = "<leader>ft"
-}
+-- Dropdown list theme using a builtin theme definitions :
+local center_list = themes.get_dropdown({
+    width = 0.5,
+    prompt = " ",
+    previewer = false,
+})
 
-
--- There wont work right, now, I'll remind you once it works
-local search_class = {
-    name = "SearchClassDoc",
-    cmd = function() builtin.lsp_document_symbols({ symbols = { "class" } }) end,
-    key = "<leader>sc",
-}
-local search_func = {
-    name = "SearchFuncDoc",
-    cmd = function() builtin.lsp_document_symbols({ symbols = { "method", "function" } }) end,
-    key = "<leader>sf"
-}
-local search_symbol = {
-    name = "SearchSymbolDoc",
-    cmd = "Telescope lsp_document_symbols",
-    key = "<leader>ss"
-}
-local search_reference = {
-    name = "SearchBuffer",
-    cmd = "Telescope lsp_references",
-    key = "<leader>sb"
-}
-
-local go_definition = {
-    name = "GoDefinition",
-    cmd = "Telescope lsp_definitions",
-    key = "gd",
-}
-
-
+-- Any extra configueration of Telescope you may want
+-- :help Telescope.setup
 function M.setup()
-    telescope.setup()
-
-    for _, cmd in ipairs(
-        {
-            find_file, find_text,
-            search_class, search_func, search_symbol, search_reference,
-            go_definition
+    telescope.setup({
+        defaults = {
+            mappings = {
+                i = {
+                    ["<esc>"] = actions.close,
+                    ["<c-l>"] = trouble.open_with_trouble,
+                },
+                n = {
+                    ["q"] = actions.close,
+                    ["<c-l>"] = trouble.open_with_trouble,
+                    ["<A-j>"] = actions.preview_scrolling_down,
+                    ["<A-k>"] = actions.preview_scrolling_up,
+                }
+            }
+        },
+        pickers = {
+            buffers = center_list,
+            find_files = center_list,
         }
-    ) do
-        util.command(cmd)
-    end
+    })
+    require("telescope").load_extension("fzf")
 end
 
 return M

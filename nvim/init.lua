@@ -61,7 +61,7 @@ local setkey = require("util").setkey
 local command = require("util").command
 
 -- Quick help
-setkey({ key = "<leader>h", cmd = ":vert bo help " })
+setkey({ key = "<leader>h", cmd = ":Telescope help_tags<cr>" })
 
 -- Move to start/end of line
 setkey({ key = "H", cmd = "^" })
@@ -101,47 +101,69 @@ setkey({ key = "<leader>fmm", cmd = ":set foldmethod=marker<CR>" })
 setkey({ key = "<leader>fmi", cmd = ":set foldmethod=indent<CR>" })
 setkey({ key = "<leader>fme", cmd = ":set foldmethod=expr<CR>" })
 
--- [e]dit [v]imrc
-setkey({ key = "<leader>ev", cmd = ":e $MYVIMRC<CR>" })
-
--- Only if you're feeling spicy, all hotkeys through the tutorial
--- won't use them
+-- Only if you're feeling spicy
 -- setkey({ key="<left>", cmd="<nop>" })
 -- setkey({ key="<right>", cmd="<nop>" })
 -- setkey({ key="<up>", cmd="<nop>" })
 -- setkey({ key="<down>", cmd="<nop>" })
 
+-- Toggle file explorer, I use Ctrl+h because it's a window that pops out of the left
+command({ key = "<C-h>", name = "ToggleTree", cmd = "NvimTreeToggle", })
 
-command({
-    name = "Format",
-    cmd = function() vim.lsp.buf.format() end,
-    key = "<C-f>"
-})
+-- [e]dit [v]imrc
+setkey({ key = "<leader>ev", name = "VIMRC", cmd = "e $MYVIMRC" })
 
-command({
-    name = "Rename",
-    cmd = function() vim.lsp.buf.rename() end,
-    key = "<leader>r"
-})
+-- Find Things
+-- Find an open buffer (This hotkey just comes from pycharm)
+command({ key = "<C-e>", name = "FindBuffer", cmd = "Telescope buffers", })
+-- Find a file with fuzzy find (Ctrl+P was a vanilla vim plugin, the hotkey stuck)
+command({ key = "<C-p>", name = "FindFile", cmd = "Telescope find_files", })
+-- [s]earch [s]tring
+command({ key = "<leader>ss", name = "FindString", cmd = "Telescope live_grep", })
+-- Find a command
+command({ key = "<C-f>", name = "FindCommand", cmd = "Telescope commands" } )
 
-command({
-    name = "Definition",
-    cmd = function() vim.lsp.buf.hover() end,
-    key = "<leader>sd"
-})
 
-command({
-    name = "CodeActions",
-    cmd = function() vim.lsp.buf.code_action() end,
-    key = "<A-cr>"
-})
 
-command({
-    name = "LineErrors",
-    cmd = function() vim.diagnostic.open_float() end,
-    key = "<leader>se"
-})
+-- Diagnostics
+-- Jump to next
+command({ key = "<c-space>", name = "NextDiagnostic", cmd = "lua vim.diagnostic.goto_next()" })
+-- [s]how [e]rror on current line
+command({ key = "se", name = "LineErrors", cmd = "lua vim.diagnostic.open_float()", })
+-- Ctrl + [D]iagnostics
+command({ key = "<C-d>", name = "DiagnosticsList", cmd = "TroubleToggle", })
 
+-- Language smarts
+-- Ctrl + [F]ormat
+command({ key = "<C-f>", name = "Format", cmd = "lua vim.lsp.buf.format()" })
+-- [r]ename (only on current buffer)
+command({ key = "<leader>r", name = "Rename", cmd = "lua vim.lsp.buf.rename()", })
+-- [s]how [d]efinition
+command({ key = "sd", name = "Definition", cmd = "lua vim.lsp.buf.hover()", })
+-- [g]o [d]efinition
+command({ key = "gd", name = "GoDefinition", cmd = "Telescope lsp_definitions", })
+-- Alt + Enter (CodeActions is not as good as pycharm right now)
+command({ key = "<A-cr>", name = "CodeActions", cmd = "lua vim.lsp.buf.code_action()", })
+-- Find a symbol (may consider `lsp_document_symbols`)
+command({ key = "<leader>S", name = "SearchSymbolDoc", cmd = "Telescope lsp_workspace_symbols", })
+
+-- Git
+command({ key = "<leader>gs", name = "GitStatus", cmd = "vertical bo Git" })
+command({ key = "<leader>gl", name = "GitLog", cmd = "vsp | GcLog" })
+command({ key = "<leader>gc", name = "GitCommit", cmd = "Git commit" })
+command({ key = "<leader>gp", name = "GitPush", cmd = "Git push" })
+command({ key = "ga", name = "GitAddHunk", cmd = "Gitsigns stage_hunk" })
+command({ key = "gr", name = "GitResetHunk", cmd = "Gitsigns reset_hunk" })
+command({ key = "gu", name = "GitUndoHunk", cmd = "Gitsigns undo_stage_hunk" })
+command({ key = "gp", name = "GitPreviewHunk", cmd = "Gitsigns preview_hunk" })
+command({ key = "gA", name = "GitAddFile", cmd = "Gitsigns stage_buffer" })
+command({ key = "<leader>tb", name = "ToggleBlameGit", cmd = "Gitsigns toggle_current_line_blame"  })
+command({ key = "<leader>td", name = "ToggleDeletedGit", cmd = "Gitsigns toggle_deleted"  })
+command({ key = "<leader>tl", name = "ToggleLineGit", cmd = "Gitsigns toggle_linehl"  })
+-- command({ key = "gR", name = "GitResetFile", cmd = "Gitsigns reset_buffer" }) -- careful
+command({ key = "gA", name = "GitAddFile", cmd = "Gitsigns stage_buffer" })
+command({ key = "gA", name = "GitAddFile", cmd = "Gitsigns stage_buffer" })
+command({ key = "gA", name = "GitAddFile", cmd = "Gitsigns stage_buffer" })
 
 -- }}}
 -- {{{ Autocommands

@@ -24,7 +24,7 @@ local function plugins(use)
         },
         config = function() require('config/telescope').setup() end
     })
- 
+
     -- Nvim tree
     -- The side tree view
     use({
@@ -42,20 +42,32 @@ local function plugins(use)
     use({
         "folke/trouble.nvim",
         requires = "kyazdani42/nvim-web-devicons",
+        config = function() require("config/trouble").setup() end
     })
 
 
     -- Bufferline
     -- Just a nice looking bufferline
-    use("akinsho/bufferline.nvim")
+    use({
+        "akinsho/bufferline.nvim",
+        config = function() require("config/bufferline").setup() end
+    })
 
     -- Lualine
     -- Just a nice looking tabline
-    use("nvim-lualine/lualine.nvim")
+    use({
+        "nvim-lualine/lualine.nvim",
+        requires = { 'kyazdani42/nvim-web-devicons', opt = true },
+        config = function() require("config/lualine").setup() end
+    })
+
 
     -- Gitsigns
     -- Nice git utilities for changes to a file
-    use("lewis6991/gitsigns.nvim")
+    use({
+        "lewis6991/gitsigns.nvim",
+        config = function () require("config/gitsigns").setup() end
+    })
 
     -- Neogen
     -- Document generator

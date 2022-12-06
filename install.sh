@@ -99,13 +99,9 @@ cp "$TREESITTER_BINARY" "${BIN_DIR}/tree-sitter"
 CONFIG_DIR="$HOME/.config"
 NVIM_CONFIG_PATH="$CONFIG_DIR/nvim"
 NVIM_BACKUP_CONFIG_PATH="$CONFIG_DIR/nvim.backup"
-MOVED_NVIM_CONFIG_DIR=0
 
 # Back up the nvim config dir if it exists
-if isdir "$NVIM_CONFIG_PATH"; then
-    mv "$NVIM_CONFIG_PATH" "$NVIM_BACKUP_CONFIG_PATH"
-    MOVED_NVIM_CONFIG_DIR=1
-fi
+isdir "$NVIM_CONFIG_PATH" && mv "$NVIM_CONFIG_PATH" "$NVIM_BACKUP_CONFIG_PATH"
 
 # Link in the config from the repo
 ln -sfn "$REPO_NVIM_CONFIG" "$CONFIG_DIR"
