@@ -146,6 +146,7 @@ for rc_file in "${rc_files[@]}"; do
         echo "# ----------------"
     fi
 done
+nvim --headless -c 'autocmd User PackerComplete quitall' -c 'PackerSync'
 
 echo "Installation seemed successful, please restart your shell and run nvim"
 exit 0
