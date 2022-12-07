@@ -48,6 +48,18 @@ function M.setup()
                 capabilities = capabilities,
                 on_attach = M.breadcrumbs_attach,
             })
+        elseif server == "sumneko_lua" then
+            lspconfig[server].setup({
+                settings = {
+                    Lua = {
+                        workspace = {
+                            library = vim.api.nvim_get_runtime_file("", true),
+                            checkThirdParty = false
+                        },
+                        telemetry = { enable = false },
+                    }
+                }
+            })
         else
             lspconfig[server].setup({
                 capabilities = capabilities,
