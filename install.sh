@@ -32,13 +32,13 @@ NVM_INSTALL_CMD="wget -qO- https://raw.githubusercontent.com/nvm-sh/nvm/${NVM_VE
 
 BIN_DIR="$(pwd)/bin"
 
-isdir () {
-    [[ -d "$1" ]];
-    return
+isdir() {
+	[[ -d "$1" ]]
+	return
 }
-isfile () {
-    [[ -f "$1" ]];
-    return
+isfile() {
+	[[ -f "$1" ]]
+	return
 }
 
 isdir "$BIN_DIR" || mkdir "$BIN_DIR"
@@ -48,15 +48,15 @@ isdir "$NVIM_UNPACK_DIR" || tar xvf "$NVIM_TAR"
 
 # We need conda to be able to create a python virtual env for all the python
 # parts of neovim
-if ! command -v "conda" > /dev/null; then
-    wget --no-clobber --output-document "$CONDA_SCRIPT" "$CONDA_LINK"
-    sh "$CONDA_SCRIPT"
-    if ! isfile "$CONDA_EXC"; then
-        echo "Something went wrong, couldn't find conda command in PATH"
-        echo "Also tried looking for binary at ${CONDA_EXC}"
-        echo "Try restarting your shell and running the install script again"
-        exit 1
-    fi
+if ! command -v "conda" >/dev/null; then
+	wget --no-clobber --output-document "$CONDA_SCRIPT" "$CONDA_LINK"
+	sh "$CONDA_SCRIPT"
+	if ! isfile "$CONDA_EXC"; then
+		echo "Something went wrong, couldn't find conda command in PATH"
+		echo "Also tried looking for binary at ${CONDA_EXC}"
+		echo "Try restarting your shell and running the install script again"
+		exit 1
+	fi
 fi
 
 $CONDA_EXC init
@@ -69,17 +69,17 @@ if ! isfile "$CONDA_SHELL_CMD"; then
 	echo "Something went wrong, try restarting your shell and running again"
 	exit 1
 fi
-source "$CONDA_SHELL_CMD" 
+source "$CONDA_SHELL_CMD"
 
 # Check that we have access to conda finally
-if ! command -v "conda" > /dev/null; then
+if ! command -v "conda" >/dev/null; then
 	echo "Something went wrong, try restarting your shell and running again"
 	exit 1
 fi
 
 # Create a virtual environment nvim can run from
 if ! isdir "$CONDA_ENV"; then
-    conda create -y -p "$CONDA_ENV" python="$CONDA_PYTHON_VERSION"
+	conda create -y -p "$CONDA_ENV" python="$CONDA_PYTHON_VERSION"
 fi
 
 # Install pynvim and get the python binary path
@@ -92,14 +92,14 @@ sed -i "${MAGIC_LINE_FOR_PYTHON_PROG}s:.*:vim.g.python3_host_prog = '${PYTHON_BI
 
 # We need a more up to date version of npm and node for some neovim things
 # This will actually replace the default node/npm on the cluster on your path
-if ! command -v "nvm" > /dev/null; then
-    eval "$NVM_INSTALL_CMD"
+if ! command -v "nvm" >/dev/null; then
+	eval "$NVM_INSTALL_CMD"
 
-    # These are commands put into the users .bashrc/.zshrc, we do them immediatly so we don't
-    # have to source them or tell the user to reset the terminal
-    export NVM_DIR="$HOME/.nvm"
-    [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-    [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+	# These are commands put into the users .bashrc/.zshrc, we do them immediatly so we don't
+	# have to source them or tell the user to reset the terminal
+	export NVM_DIR="$HOME/.nvm"
+	[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"                   # This loads nvm
+	[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion" # This loads nvm bash_completion
 fi
 
 # We need a more recent node version, 19 worked for me
@@ -108,11 +108,11 @@ NODE_VERSION=$(node --version | grep -oE "^v[0-9]+" | tr -d "v")
 
 # We need tree-sitter cli for parts of the Tree Sitter language parsers
 # that neovim can use
-if ! command -v "tree-sitter" > /dev/null; then
-    isdir "$TREESITTER_DIR" || mkdir "$TREESITTER_DIR"
-    wget --no-clobber --output-document "$TREESITTER_GZ" "$TREESITTER_LINK"
-    gzip -c -d "$TREESITTER_GZ" > "$TREESITTER_BINARY"
-    chmod u+x "$TREESITTER_BINARY"
+if ! command -v "tree-sitter" >/dev/null; then
+	isdir "$TREESITTER_DIR" || mkdir "$TREESITTER_DIR"
+	wget --no-clobber --output-document "$TREESITTER_GZ" "$TREESITTER_LINK"
+	gzip -c -d "$TREESITTER_GZ" >"$TREESITTER_BINARY"
+	chmod u+x "$TREESITTER_BINARY"
 fi
 
 # Back up any existing vimrc
@@ -129,8 +129,8 @@ isdir "$NVIM_CONFIG_PATH" && mv "$NVIM_CONFIG_PATH" "$NVIM_BACKUP_CONFIG_PATH"
 # Link in the config from the repo
 ln -sfn "$REPO_NVIM_CONFIG" "$CONFIG_DIR"
 
-print_addpath () {
-    echo "export PATH=\"\${PATH}:${1}\""
+print_addpath() {
+	echo "export PATH=\"\${PATH}:${1}\""
 }
 BASHRC_FILE="$HOME/.bashrc"
 ZSHRC_FILE="$HOME/.zshrc"
@@ -138,15 +138,15 @@ ZSHRC_FILE="$HOME/.zshrc"
 rc_files=("$BASHRC_FILE" "$ZSHRC_FILE")
 
 for rc_file in "${rc_files[@]}"; do
-    if isfile "$rc_file"; then
-        echo "# Added the following line to ${rc_file}"
-        echo "# ----------------"
-	echo $(print_addpath "$BIN_DIR") >> "$BASHRC_FILE" 
-        print_addpath "$BIN_DIR"
-        echo "# ----------------"
-    fi
+	if isfile "$rc_file"; then
+		echo "# Added the following line to ${rc_file}"
+		echo "# ----------------"
+		echo $(print_addpath "$BIN_DIR") >>"$BASHRC_FILE"
+		print_addpath "$BIN_DIR"
+		echo "# ----------------"
+	fi
 done
 nvim --headless -c 'autocmd User PackerComplete quitall' -c 'PackerSync'
+nvim -c "VIMRC"
 
-echo "Installation seemed successful, please restart your shell and run nvim"
 exit 0
