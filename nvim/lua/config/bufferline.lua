@@ -2,6 +2,9 @@ local M = {}
 
 
 function M.setup()
+    if vim.o.showtabline == 0 then
+        return
+    end
     require("bufferline").setup({
         options = {
             mode = "buffers",
@@ -15,6 +18,7 @@ function M.setup()
                     text_align = "left",
                 }
             },
+            always_show_bufferline = false,
             show_close_icon = false,
             seperator_style = 'thick',
             diagnostics = "nvim_lsp",

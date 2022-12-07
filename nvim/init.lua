@@ -2,7 +2,17 @@
 -- Choose your fighter...
 vim.g.mapleader = ","
 
+
 vim.cmd("colo tokyonight-storm")
+
+-- This is automatically generated, this should not be set to the virtual
+-- env and instead to a specifically set up environment for nvim to run in
+-- It's also crucial to the installer that this is on line 11, lol
+vim.g.python3_host_prog = '/home/bergmane/nvim/.nvim-python-venv/bin/python'
+
+if vim.env.VIRTUAL_ENV == nil and vim.env.CONDA_PYTHON_EXE then
+    vim.env.VIRTUAL_ENV = vim.env.CONDA_PYTHON_EXE
+end
 
 vim.cmd([[filetype plugin indent on]])
 
@@ -17,7 +27,6 @@ vim.o.cursorlineopt = "both"
 vim.o.expandtab = true
 vim.o.fillchars = "fold: ,foldclose: ,foldopen: ,foldsep: ,diff: ,eob: "
 vim.o.fixendofline = false
-vim.o.foldexpr = "nvim_treesitter#foldexpr()"
 vim.o.formatoptions = "lnjqr"
 vim.o.guicursor = ""
 vim.o.ignorecase = true
@@ -30,7 +39,7 @@ vim.o.relativenumber = false
 vim.o.scrolloff = 10
 vim.o.shiftwidth = 0
 vim.o.showmode = false
-vim.o.signcolumn = "yes:2"
+vim.o.signcolumn = "yes:1"
 vim.o.smartcase = true
 vim.o.smartindent = true
 vim.o.autoindent = true
@@ -42,15 +51,28 @@ vim.o.tabstop = 2
 vim.o.termguicolors = true
 vim.o.textwidth = 120
 vim.o.undodir = vim.fn.expand("~/.cache/nvim/undodir")
-vim.o.updatetime = 1000 -- Time for diagnostics to popup on cursor hold
 vim.o.undofile = true
 vim.o.viewoptions = "cursor,folds,slash,unix"
 vim.o.wrap = false
 vim.o.foldmarker = "{{{,}}}"
 vim.o.foldmethod = "expr"
-vim.o.foldexpr = "nvim_treesitter#foldexpr()" -- We'll see this later
+vim.o.foldexpr = "nvim_treesitter#foldexpr()"
+vim.o.foldlevel = 99
+vim.o.foldcolumn = '0' -- '0' is not bad
+vim.o.showtabline = 0
 vim.cmd([[ set foldopen-=block ]])
 vim.cmd([[ set foldcolumn=0 ]]) -- Not sure why this doesn't work with `vim.o`
+
+local setsign = require("util").setsign
+setsign({ name = 'DiagnosticSignError', sign = '' })
+setsign({ name = 'DiagnosticSignWarn', sign = '' })
+setsign({ name = 'DiagnosticSignHint', sign = '' })
+setsign({ name = 'DiagnosticSignInfo', sign = '' })
+
+-- }}}
+-- {{{ Misc
+-- Needs to go before any plugins are loaded Unfortunatly
+vim.cmd([[ highlight Folded gui=italic guibg=NONE ]])
 -- }}}
 -- {{{ Modules
 require("plugins").setup() -- Keep this first
@@ -169,12 +191,16 @@ command({ key = "gA", name = "GitAddFile", cmd = "Gitsigns stage_buffer" })
 -- {{{ Autocommands
 -- Just going to assume you know what autocommands are
 -- All you need to know is that it highlights when you're in insert mode
-vim.api.nvim_create_augroup("InsertCursor", { clear = true })
+vim.api.nvim_create_augroup("UserCommands", { clear = true })
 vim.api.nvim_create_autocmd("InsertEnter",
-    { group = "InsertCursor", command = "hi CursorLine gui=bold,underline", }
+    { group = "UserCommands", command = "hi CursorLine gui=bold", }
 )
 vim.api.nvim_create_autocmd("InsertLeave",
-    { group = "InsertCursor", command = "hi CursorLine gui=NONE", }
+    { group = "UserCommands", command = "hi CursorLine gui=NONE", }
+)
+vim.api.nvim_create_autocmd("BufRead",
+    { group = "UserCommands", command = "set nofoldenable" }
 )
 -- }}}
+--
 -- vim:foldmethod=marker

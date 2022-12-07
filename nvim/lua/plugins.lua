@@ -10,7 +10,11 @@ local function plugins(use)
     -- Easy setup of many language specific tools and LSP servers to give "smarts" to the editor
     use({
         "williamboman/mason.nvim",
-        requires = { "williamboman/mason-lspconfig.nvim", "neovim/nvim-lspconfig" },
+        requires = {
+            "williamboman/mason-lspconfig.nvim",
+            "neovim/nvim-lspconfig",
+            "jayp0521/mason-null-ls.nvim",
+        },
         config = function() require("config/mason").setup() end
     })
 
@@ -57,7 +61,10 @@ local function plugins(use)
     -- Just a nice looking tabline
     use({
         "nvim-lualine/lualine.nvim",
-        requires = { 'kyazdani42/nvim-web-devicons', opt = true },
+        requires = {
+            "arkav/lualine-lsp-progress",
+            {'kyazdani42/nvim-web-devicons', opt = true},
+        },
         config = function() require("config/lualine").setup() end
     })
 
@@ -69,18 +76,23 @@ local function plugins(use)
         config = function () require("config/gitsigns").setup() end
     })
 
-    -- Neogen
-    -- Document generator
-    use("danymat/neogen")
-
     -- Ident-Blankline
     -- Gives the indent lines
-    use("lukas-reineke/indent-blankline.nvim")
-
+    use({
+        "lukas-reineke/indent-blankline.nvim",
+        config = function () require("config/indent-blankline").setup() end
+    })
     -- Null-ls
     -- Allows linters/checkers/tools to hook into neovims lsp system
     -- I.e. pylint, flake8, black ...
-    use("jose-elias-alvarez/null-ls.nvim")
+    use({
+        "jose-elias-alvarez/null-ls.nvim",
+        config = function() require("config/null-ls").setup() end
+    })
+
+    -- Virtual-types
+    -- Get information about types of things inline as virtual text
+    use("jubnzv/virtual-types.nvim")
 
     -- Completion
     -- Suggestions as you type
@@ -93,8 +105,18 @@ local function plugins(use)
             "lukas-reineke/cmp-under-comparator",  -- Deprioritize double underscore in python
             "windwp/nvim-autopairs", -- Autopair brackets on function completion
             "hrsh7th/cmp-nvim-lsp-signature-help", -- Signature help as you fill in functions
-        }
+            "saadparwaiz1/cmp_luasnip",
+        },
+        config = function() require("config/nvim-cmp").setup() end
     })
+
+    -- Breadcrumbs
+    use({
+        "SmiteshP/nvim-navic",
+        requires = "neovim/nvim-lspconfig",
+        config = function () require("config/nvim-navic").setup() end
+    })
+
 
     -- Treesitter
     -- Language aware syntax tree and associated plugins
@@ -103,12 +125,11 @@ local function plugins(use)
         requires = {
             "nvim-treesitter/nvim-treesitter-refactor",
             "RRethy/nvim-treesitter-textsubjects",
-            "nvim-treesitter/nvim-treesitter-context",
+            "nvim-treesitter/nvim-treesitter-textobjects",
             {
                 "eddiebergman/nvim-treesitter-pyfold",
                 ft = { "python" }
             },
-            "nvim-treesitter/nvim-treesitter-textobjects",
         },
         config = function() require("config/treesitter").setup() end,
         run = ":TSUpdate"
@@ -132,13 +153,16 @@ local function plugins(use)
 
     -- Autoclose brackets
     use("townk/vim-autoclose")
+
+    -- Snippets
+    use("L3MON4D3/LuaSnip")
 end
 
 function M.setup()
     M.ensure_installed()
+    M.autocompile()
     require("packer").startup(plugins)
 end
-
 
 function M.ensure_installed()
     local fn = vim.fn

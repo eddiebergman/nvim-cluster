@@ -1,7 +1,8 @@
-#!/bin/sh
+#!/bin/bash
 GITHUB_LINK="https://github.com/eddiebergman/nvim-cluster.git"
 REPO_DIR="$(pwd)/nvim-cluster"
 REPO_NVIM_CONFIG="$(pwd)/nvim"
+MAGIC_LINE_FOR_PYTHON_PROG="11"
 
 CONDA_PYTHON_VERSION="3.10"
 CONDA_LINK="https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh"
@@ -54,14 +55,26 @@ if ! command -v "conda" > /dev/null; then
     fi
 fi
 
+if command -v "conda"; then
+    CONDA=conda
+else
+    CONDA=$CONDA_EXC
+fi
+
+
 # Create a virtual environemtn nvim can run from
 if ! isdir "$CONDA_ENV"; then
-    if command -v "conda"; then
-        conda create -y -p "$CONDA_ENV" python="$CONDA_PYTHON_VERSION"
-    else
-        $CONDA_EXC create -y -p "$CONDA_ENV" python="$CONDA_PYTHON_VERSION"
-    fi
+    $CONDA create -y -p "$CONDA_ENV" python="$CONDA_PYTHON_VERSION"
 fi
+
+$CONDA activate -p "$CONDA_ENV"
+python -m pip install pynvim
+PYTHON_BIN=$(which python)
+
+# Replace the vim.g.loaded_python3_provider path
+INIT_FILE="$REPO_NVIM_CONFIG/init.lua"
+sed -i "${MAGIC_LINE_FOR_PYTHON_PROG}s:.*:${PYTHON_BIN}:" "$INIT_FILE"
+$CONDA deactivate
 
 # We need a more up to date version of npm and node for some neovim things
 # This will actually replace the default node/npm on the cluster on your path
@@ -127,3 +140,8 @@ for rc_file in "${rc_files[@]}"; do
         echo "export PATH=\"{PATH}:${HOME}\""
     fi
 done
+
+# Install packer and Mason Lsp things 
+$NVIM_BINARY --headless -c 'autocmd User PackerComplete quitall' -c 'PackerSync'
+$NVIM_BINARY --headless -c 'autocmd User PackerCompileDone quitall' -c 'PackerCompile'
+$NVIM_BINARY -c 'Mason'

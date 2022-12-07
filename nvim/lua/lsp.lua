@@ -1,8 +1,8 @@
 local M = {}
 local lspconfig = require("lspconfig")
-local util = require("util")
 
 local above_below_border = { "▔", "▔", "▔", " ", "▁", "▁", "▁", " " }
+local capabilities = require("cmp_nvim_lsp").default_capabilities()
 
 function M.setup()
     vim.diagnostic.config({
@@ -18,23 +18,49 @@ function M.setup()
             prefix = "",
         }
     })
-    M.show_diagnostics_on_hover()
+    -- M.show_diagnostics_on_hover()
     M.enable_markdown_highlighting_in_lsp_hover()
-    M.custom_signs()
+    -- Just makes the lua lsp a bit smarter
+    require("neodev").setup()
 
+    local lsp_servers = require("config/mason").lsp_servers
+    for _, server in ipairs(lsp_servers) do
 
-    for _, lsp_setup in ipairs({ M.lua_lsp, M.bash_lsp }) do
-        lsp_setup()
+        -- Special setup for some servers like pyright where I know a bit more
+        if server == "pyright" then
+            lspconfig[server].setup({
+                settings = {
+                    pyright = {
+                        disableOrganizeImports = true, -- Will use ruff instead
+                    },
+                    python = {
+                        analysis = {
+                            autoImportCompletions = true,
+                            diagnosticMode = "openFilesOnly",  -- Use "workspace" if you like but may be slow
+                            typeCheckingMode = "off", -- Using Mypy, it's better
+                            pythonPath = "python", -- gets replaced below
+                        }
+                    },
+                },
+                before_init = function(_, config)
+                    config.settings.python.pythonPath = require("util").get_python_path(config.root_dir)
+                end,
+                capabilities = capabilities,
+                on_attach = M.breadcrumbs_attach,
+            })
+        else
+            lspconfig[server].setup({
+                capabilities = capabilities,
+                on_attach = M.breadcrumbs_attach,
+            })
+        end
     end
 end
 
-function M.lua_lsp()
-    require("neodev").setup()
-    lspconfig.sumneko_lua.setup({})
-end
-
-function M.bash_lsp()
-    lspconfig.bashls.setup({})
+function M.breadcrumbs_attach(client, bufnr)
+    if client.server_capabilities.documentSymbolProvider then
+        require("nvim-navic").attach(client, bufnr)
+    end
 end
 
 function M.show_diagnostics_on_hover()
@@ -58,13 +84,6 @@ function M.enable_markdown_highlighting_in_lsp_hover()
     vim.lsp.handlers["textDocument/signatureHelp"] = vim.lsp.with(
         vim.lsp.handlers.signature_help, { border = above_below_border }
     )
-end
-
-function M.custom_signs()
-    util.setsign({ name = 'DiagnosticSignError', sign = '' })
-    util.setsign({ name = 'DiagnosticSignWarn', sign = '' })
-    util.setsign({ name = 'DiagnosticSignHint', sign = '' })
-    util.setsign({ name = 'DiagnosticSignInfo', sign = '' })
 end
 
 return M
