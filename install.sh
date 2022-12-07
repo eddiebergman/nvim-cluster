@@ -88,7 +88,7 @@ PYTHON_BIN=$(conda run -p "$CONDA_ENV" which python)
 
 # Replace the vim.g.loaded_python3_provider path
 INIT_FILE="$REPO_DIR/nvim/init.lua"
-sed -i "${MAGIC_LINE_FOR_PYTHON_PROG}s:.*:${PYTHON_BIN}:" "$INIT_FILE"
+sed -i "${MAGIC_LINE_FOR_PYTHON_PROG}s:.*:vim.g.python3_host_prog = '${PYTHON_BIN}':" "$INIT_FILE"
 
 # We need a more up to date version of npm and node for some neovim things
 # This will actually replace the default node/npm on the cluster on your path
