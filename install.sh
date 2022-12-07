@@ -139,7 +139,7 @@ rc_files=("$BASHRC_FILE" "$ZSHRC_FILE")
 
 for rc_file in "${rc_files[@]}"; do
     if isfile "$rc_file"; then
-        echo "# From nvim-cluster"
+        echo "# Added the following line to ${rc_file}"
         echo "# ----------------"
 	echo $(print_addpath "$BIN_DIR") >> "$BASHRC_FILE" 
         print_addpath "$BIN_DIR"
@@ -147,4 +147,5 @@ for rc_file in "${rc_files[@]}"; do
     fi
 done
 
-echo "Installation seemed successful, please restart your shell and run `nvim`"
+echo "Installation seemed successful, please restart your shell and run nvim"
+exit 0
