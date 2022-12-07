@@ -16,7 +16,6 @@ local M = {}
 
 -- If configuring this again, check out their dispatcher and follow what they
 -- do to figure it out
-local util = require("util")
 local lib = require("nvim-tree.lib")
 local view = require("nvim-tree.view")
 
