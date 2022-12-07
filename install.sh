@@ -55,26 +55,37 @@ if ! command -v "conda" > /dev/null; then
     fi
 fi
 
-if command -v "conda"; then
-    CONDA=conda
-else
-    CONDA=$CONDA_EXC
+$CONDA_EXC init
+eval "$($CONDA_EXC shell.bash hook)"
+CONDA_BASE="$($CONDA_EXC info --base)"
+
+# Check that the conda shell exists
+CONDA_SHELL_CMD="$CONDA_BASE/etc/profile.d/conda.sh"
+if ! isfile "$CONDA_SHELL_CMD"; then
+	echo "Something went wrong, try restarting your shell and running again"
+	exit 1
+fi
+source "$CONDA_SHELL_CMD" 
+
+# Check that we have access to conda finally
+if ! command -v "conda" > /dev/null; then
+	echo "Something went wrong, try restarting your shell and running again"
+	exit 1
 fi
 
-
-# Create a virtual environemtn nvim can run from
+# Create a virtual environment nvim can run from
 if ! isdir "$CONDA_ENV"; then
-    $CONDA create -y -p "$CONDA_ENV" python="$CONDA_PYTHON_VERSION"
+    conda create -y -p "$CONDA_ENV" python="$CONDA_PYTHON_VERSION"
 fi
 
-$CONDA activate -p "$CONDA_ENV"
-python -m pip install pynvim
-PYTHON_BIN=$(which python)
+# Install pynvim and get the python binary path
+conda run -p "$CONDA_ENV" pip install pynvim
+PYTHON_BIN=$(conda run -p "$CONDA_ENV" which python)
+CONDA deactivate
 
 # Replace the vim.g.loaded_python3_provider path
 INIT_FILE="$REPO_NVIM_CONFIG/init.lua"
 sed -i "${MAGIC_LINE_FOR_PYTHON_PROG}s:.*:${PYTHON_BIN}:" "$INIT_FILE"
-$CONDA deactivate
 
 # We need a more up to date version of npm and node for some neovim things
 # This will actually replace the default node/npm on the cluster on your path
@@ -140,8 +151,3 @@ for rc_file in "${rc_files[@]}"; do
         echo "export PATH=\"{PATH}:${HOME}\""
     fi
 done
-
-# Install packer and Mason Lsp things 
-$NVIM_BINARY --headless -c 'autocmd User PackerComplete quitall' -c 'PackerSync'
-$NVIM_BINARY --headless -c 'autocmd User PackerCompileDone quitall' -c 'PackerCompile'
-$NVIM_BINARY -c 'Mason'
