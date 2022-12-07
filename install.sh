@@ -1,8 +1,12 @@
 #!/bin/bash
 GITHUB_LINK="https://github.com/eddiebergman/nvim-cluster.git"
 REPO_DIR="$(pwd)/nvim-cluster"
-REPO_NVIM_CONFIG="$(pwd)/nvim"
+REPO_NVIM_CONFIG="$REPO_DIR/nvim"
 MAGIC_LINE_FOR_PYTHON_PROG="11"
+
+CONFIG_DIR="$HOME/.config"
+NVIM_CONFIG_PATH="$CONFIG_DIR/nvim"
+NVIM_BACKUP_CONFIG_PATH="$CONFIG_DIR/nvim.backup"
 
 CONDA_PYTHON_VERSION="3.10"
 CONDA_LINK="https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh"
@@ -118,10 +122,6 @@ isfile "$HOME/.vimrc" && cp "$HOME/.vimrc" "$BACKUP_VIMRC"
 # Move binaries to one folder
 cp "$NVIM_BINARY" "${BIN_DIR}/nvim"
 cp "$TREESITTER_BINARY" "${BIN_DIR}/tree-sitter"
-
-CONFIG_DIR="$HOME/.config"
-NVIM_CONFIG_PATH="$CONFIG_DIR/nvim"
-NVIM_BACKUP_CONFIG_PATH="$CONFIG_DIR/nvim.backup"
 
 # Back up the nvim config dir if it exists
 isdir "$NVIM_CONFIG_PATH" && mv "$NVIM_CONFIG_PATH" "$NVIM_BACKUP_CONFIG_PATH"
