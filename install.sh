@@ -81,10 +81,9 @@ fi
 # Install pynvim and get the python binary path
 conda run -p "$CONDA_ENV" pip install pynvim
 PYTHON_BIN=$(conda run -p "$CONDA_ENV" which python)
-CONDA deactivate
 
 # Replace the vim.g.loaded_python3_provider path
-INIT_FILE="$REPO_NVIM_CONFIG/init.lua"
+INIT_FILE="$REPO_DIR/nvim/init.lua"
 sed -i "${MAGIC_LINE_FOR_PYTHON_PROG}s:.*:${PYTHON_BIN}:" "$INIT_FILE"
 
 # We need a more up to date version of npm and node for some neovim things
@@ -142,12 +141,10 @@ for rc_file in "${rc_files[@]}"; do
     if isfile "$rc_file"; then
         echo "# From nvim-cluster"
         echo "# ----------------"
-        print_addpath "$BIN_DIR" >> "$BASHRC_FILE"
-        echo "# ----------------"
-
-        echo "Added the following lines to your $(basename "${rc_file}") at"
-        echo " - $BASHRC_FILE"
+	echo $(print_addpath "$BIN_DIR") >> "$BASHRC_FILE" 
         print_addpath "$BIN_DIR"
-        echo "export PATH=\"{PATH}:${HOME}\""
+        echo "# ----------------"
     fi
 done
+
+echo "Installation seemed successful, please restart your shell and run `nvim`"
