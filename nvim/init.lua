@@ -2,18 +2,17 @@
 -- Choose your fighter...
 vim.g.mapleader = ","
 
+-- This is automatically generated, this should not be set to the virtual
+-- env and instead to a specifically set up environment for nvim to run in
+-- It's also crucial to the installer that this is on line 8, lol
+vim.g.python3_host_prog = '/home/bergmane/nvim/.nvim-python-venv/bin/python'
 
 vim.cmd([[
     try
         colo tokyonight-storm
     catch
 	    colo default
-    endtry
 ]])
-
--- This is automatically generated, this should not be set to the virtual
--- env and instead to a specifically set up environment for nvim to run in
--- It's also crucial to the installer that this is on line 11, lol
 
 if vim.env.VIRTUAL_ENV == nil and vim.env.CONDA_PYTHON_EXE then
     vim.env.VIRTUAL_ENV = vim.env.CONDA_PYTHON_EXE

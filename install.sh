@@ -2,7 +2,7 @@
 GITHUB_LINK="https://github.com/eddiebergman/nvim-cluster.git"
 REPO_DIR="$(pwd)/nvim-cluster"
 REPO_NVIM_CONFIG="$REPO_DIR/nvim"
-MAGIC_LINE_FOR_PYTHON_PROG="11"
+MAGIC_LINE_FOR_PYTHON_PROG="8"
 
 CONFIG_DIR="$HOME/.config"
 NVIM_CONFIG_PATH="$CONFIG_DIR/nvim"
