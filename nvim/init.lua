@@ -138,7 +138,7 @@ setkey({ key = "<leader>fme", cmd = ":set foldmethod=expr<CR>" })
 command({ key = "<C-h>", name = "ToggleTree", cmd = "NvimTreeToggle", })
 
 -- [e]dit [v]imrc
-setkey({ key = "<leader>ev", name = "VIMRC", cmd = "e $MYVIMRC" })
+command({ key = "<leader>ev", name = "VIMRC", cmd = "e $MYVIMRC" })
 
 -- Find Things
 -- Find an open buffer (This hotkey just comes from pycharm)
@@ -202,9 +202,6 @@ vim.api.nvim_create_autocmd("InsertEnter",
 )
 vim.api.nvim_create_autocmd("InsertLeave",
     { group = "UserCommands", command = "hi CursorLine gui=NONE", }
-)
-vim.api.nvim_create_autocmd("BufRead",
-    { group = "UserCommands", command = "set nofoldenable" }
 )
 -- }}}
 --
