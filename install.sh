@@ -147,7 +147,7 @@ for rc_file in "${rc_files[@]}"; do
 	fi
 done
 nvim --headless -c "autocmd User PackerComplete quitall" -c "PackerSync"
-nvim --headless -c "PackerSync" -c "TSInstallSync maintained" -c q
+nvim --headless -c "PackerSync" -c "TSInstallSync all" -c q
 nvim -c "VIMRC"
 
 exit 0
