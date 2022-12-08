@@ -83,5 +83,6 @@ function M.get_python_path(workspace)
     -- Fallback to system Python.
     return vim.fn.exepath("python3") or vim.fn.exepath("python") or "python"
 end
+-- banana
 
 return M
