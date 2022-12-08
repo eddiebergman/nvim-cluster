@@ -11,11 +11,24 @@ local M = {}
 --  h to collapse section
 --  L to open but stay in tree
 --  H to collapse all
---  a add a file (end it with a / to/make/a/directory/)
+
+-- 
+-- `a` - add a file or directory
+--      add a file somewhere 
+--      add a directory somewhere by ending it in a slash `/`
 --  https://github.com/nvim-tree/nvim-tree.lua/wiki/Recipes#h-j-k-l-style-navigation-and-editing
 
--- If configuring this again, check out their dispatcher and follow what they
--- do to figure it out
+-- `d` - delete a file/directory
+--      delete the file you create or 
+
+-- Type `/config` to see how these kind of plugins are configured normally
+-- and then come back here (<ctrl-o>)
+
+-- The other two forms of navigation are bound to `<Ctrl+e>` and `<Ctrl+p>`
+-- The first runs `:Telescope buffers` and the second `:Telescope find_files`
+-- Use whichever one you like to get back to `init.lua`
+
+
 local lib = require("nvim-tree.lib")
 local view = require("nvim-tree.view")
 
@@ -69,7 +82,6 @@ local function vsplit_preview()
     view.focus()
 end
 
---
 -- following options are the default
 -- each of these are documented in `:help nvim-tree.OPTION_NAME`
 local config = {
@@ -157,6 +169,7 @@ local config = {
 
 function M.setup()
     require('nvim-tree').setup(config)
+    -- This just nvim quit properly if the tree is the last window open
     vim.cmd([[
         autocmd BufEnter * ++nested if winnr('$') == 1 && bufname() == 'NvimTree_' . tabpagenr() | quit | endif
     ]])

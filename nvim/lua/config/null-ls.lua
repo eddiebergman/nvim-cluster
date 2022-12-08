@@ -3,6 +3,8 @@ local builtins = require("null-ls.builtins")
 local diagnostics = builtins.diagnostics
 local formatting = builtins.formatting
 
+-- banana
+
 function M.setup()
     require("null-ls").setup({
         debug = true, -- :NullLsLog to get the log if deubg is on

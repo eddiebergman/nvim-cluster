@@ -33,6 +33,7 @@ function M.setup()
         pickers = {
             buffers = center_list,
             find_files = center_list,
+            commands = center_list,
         }
     })
     require("telescope").load_extension("fzf")
