@@ -392,6 +392,9 @@ end
 -- want to read through the `install.sh` script in this repo
 -- to see that setup steps that were performed as it's usually
 -- a bit more of a tedious once-off process to get right.
+--
+-- If you need more language tools, type `:Mason`, you will likely
+-- need to go to `null_ls.lua` or `lsp.lua` to set them up once installed.
 require("plugins").setup() -- Keep this first
 require("lsp").setup() -- Language smarts
 -- }}}
