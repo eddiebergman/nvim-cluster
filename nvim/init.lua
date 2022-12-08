@@ -185,7 +185,7 @@ command({ key = "gu", name = "GitUndoHunk", cmd = "Gitsigns undo_stage_hunk" })
 command({ key = "gp", name = "GitPreviewHunk", cmd = "Gitsigns preview_hunk" })
 command({ key = "gA", name = "GitAddFile", cmd = "Gitsigns stage_buffer" })
 
--- See who commited what
+-- See who commited what!
 command({ key = "<leader>tb", name = "ToggleBlameGit", cmd = "Gitsigns toggle_current_line_blame" })
 command({ key = "<leader>td", name = "ToggleDeletedGit", cmd = "Gitsigns toggle_deleted" })
 command({ key = "<leader>tl", name = "ToggleLineGit", cmd = "Gitsigns toggle_linehl" })
