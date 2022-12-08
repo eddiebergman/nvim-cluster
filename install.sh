@@ -148,6 +148,7 @@ for rc_file in "${rc_files[@]}"; do
 done
 nvim --headless -c "autocmd User PackerComplete quitall" -c "PackerSync"
 nvim --headless -c "TSInstallSync lua python query json markdown markdown_inline diff gitcommit gitignore help make bash regex toml vim yaml git_rebase" -c q
+cd "$REPO_DIR"
 nvim -c "VIMRC"
 
 exit 0
