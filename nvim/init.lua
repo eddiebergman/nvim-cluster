@@ -4,8 +4,7 @@
 -- This is automatically generated, this should not be set to the virtual
 -- env and instead to a specifically set up environment for nvim to run in
 -- It's also crucial to the installer that this is on line 8, lol
-vim.g.python3_host_prog = '/home/bergmane/nvim/.nvim-python-venv/bin/python'
-
+-- REPLACE ME
 
 -- Hi,
 -- I assume you know some basic vim. If you manage to leave this and can't find
