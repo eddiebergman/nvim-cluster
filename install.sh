@@ -171,7 +171,7 @@ backup_existing_configs () {
 install_neovim_plugins () {
 	# Install neovim
 	nvim --headless -c "autocmd User PackerComplete quitall" -c "PackerSync"
-	nvim --headless -c "LspInstall bashls yamlls taplo esbonio marksman sumneko_lua pyright jsonls clangd" \
+	nvim --headless -c "LspInstall sumneko_lua bashls yamlls taplo esbonio marksman pyright jsonls clangd" \
     -c "MasonInstall ruff mypy actionlint flake8 yamllint yamlfmt black clang-format jq shfmt" \
     -c "TSInstallSync lua python query json markdown markdown_inline diff gitcommit gitignore help make bash regex toml vim yaml git_rebase" \
     -c qa
