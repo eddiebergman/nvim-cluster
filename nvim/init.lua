@@ -5,11 +5,14 @@
 -- env and instead to a specifically set up environment for nvim to run in
 -- It's also crucial to the installer that this is on line 8, lol
 -- REPLACE ME
+vim.g.python3_host_prog = 'REPLACE_ME'
 
 -- Hi,
 -- I assume you know some basic vim. If you manage to leave this and can't find
--- your way back, type `:echo %` to check the file we're in
---
+-- your way back, type `:!echo %` to check the file we're in. The `:!` makes
+-- everything after it a command line command and the '%' is shorthand for the
+-- current file.
+
 -- First you are used to `h`,`j`,`k`,`l` to navigate
 -- I've also set `H` and `L` (shift-h, shift-l) to go to the start and end of line
 -- Give it a go
