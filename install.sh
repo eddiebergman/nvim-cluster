@@ -146,7 +146,7 @@ install_neovim () {
 		tar -xf "$NVIM_TAR"
 	fi
 	export PATH="${NVIM_BINARY_DIR}:$PATH"
-	if command "nvim"; then
+	if iscommand "nvim"; then
 		return 0
 	fi
 	return 1
@@ -197,6 +197,7 @@ isdir "$INSTALL_DIR" || mkdir "$INSTALL_DIR"
 cd "$INSTALL_DIR" || exit 1
 
 ensure_conda || (echo "Something went trying to install/use conda, try again?" && exit 1)
+ensure_treesitter || (echo "Something went wrong, try again" && exit 1)
 create_conda_virtual_env_for_neovim || (echo "Something went wrong creating Conda env for neovim, try again?" && exit 1)
 ensure_updated_npm_through_nvm || (echo "Something went wrong installing nodejs for neovim" && exit 1)
 install_neovim || (echo "Something went wrong building neovim" && exit 1)
