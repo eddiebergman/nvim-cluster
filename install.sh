@@ -182,11 +182,11 @@ add_paths () {
 
 	for rc_file in "${rc_files[@]}"; do
 		if isfile "$rc_file"; then
-			echo "From nvim-cluster" >> "$rc_file"
-			echo "----------------" >> "$rc_file"
+			echo "# From nvim-cluster" >> "$rc_file"
+			echo "# ----------------" >> "$rc_file"
 			echo "export PATH=\"${NVIM_BINARY_DIR}:\$PATH\"" >> "$rc_file"
 			echo "export PATH=\"${TREESITTER_DIR}:\$PATH\"" >> "$rc_file"
-			echo "----------------" >> "$rc_file"
+			echo "# ----------------" >> "$rc_file"
 		fi
 	done
 }
