@@ -19,7 +19,8 @@ nvim init.lua
 
 This walkthrough should take 10-20 minutes depending on your familiarty with vim.
 
-### Tips
+## Tips
+
 After you've gone through the walkthrough, you should be good in `90%` of situations and maybe
 missing something in the other `10%`.
 
@@ -43,7 +44,8 @@ To update plugins, run `:PackerSync`.
 
 [The neovim subreddit](https://www.reddit.com/r/neovim/) if a great place to find new cool things.
 
-### How does this work?
+## How does this work?
+
 The install script will download a release binary of neovim so we don't use the out-dated version
 on the cluster, adding it to your `$PATH` in your `.bashrc` and `.zshrc` if present.
 
@@ -56,7 +58,6 @@ If you want to edit anything, you can just use `<C-f>VIMRC` or manually with:
 cd $HOME/.config/nvim
 nvim
 ```
-
 
 Neovim has support for the **L**anguage **S**erver **P**rotocol (LSP), the same protocol that powers
 vscode and all it's language smart plugins. This installation comes with a bunch of
@@ -73,7 +74,8 @@ sorts of languages. I've installed the `tree-sitter` cli tool which `neovim` wil
 for any new language you may use.
 
 
-### Help
+## Help
+
 > I'm seeing errors during the installation.
 
 Yup that's alright, this is because some configuration code tries to use plugins before they're installed.
@@ -105,7 +107,16 @@ some local app to the cluster.
 Yep, it's annoying and I havn't really gone through enough to figure it out yet. See `:help clipboard`
 and if you get it to work, please let me know!
 
+> How do I refactor across a project?
+
+Open-source python language servers are not as good as the closed-source language servers used by
+Pycharm (?) and VScode (Pylance). Pylance is Microsofts closed source improvement over `pyright`
+which is what I have pre-installed with neovim. Your best friend for refactoring is to search for
+a string over the entire project `<leader>ss` by default and using `<C-l>` to populate the quick-jump
+bar on the side.
+
 > I don't like it, how do I uninstall?
+
 ```bash
 # rm -rf the `nvim-cluster` directory which would be created wherever you ran the install command
 rm -rf ~/.config/nvim  # Config files
