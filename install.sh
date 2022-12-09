@@ -182,8 +182,11 @@ add_paths () {
 
 	for rc_file in "${rc_files[@]}"; do
 		if isfile "$rc_file"; then
+			echo "From nvim-cluster" >> "$rc_file"
+			echo "----------------" >> "$rc_file"
 			echo "export PATH=\"${NVIM_BINARY_DIR}:\$PATH\"" >> "$rc_file"
 			echo "export PATH=\"${TREESITTER_DIR}:\$PATH\"" >> "$rc_file"
+			echo "----------------" >> "$rc_file"
 		fi
 	done
 }
@@ -193,8 +196,6 @@ add_paths () {
 isdir "$INSTALL_DIR" || mkdir "$INSTALL_DIR"
 cd "$INSTALL_DIR" || exit 1
 
-echo "From nvim-cluster" >> "$rc_file"
-echo "----------------" >> "$rc_file"
 ensure_conda || (echo "Something went trying to install/use conda, try again?" && exit 1)
 create_conda_virtual_env_for_neovim || (echo "Something went wrong creating Conda env for neovim, try again?" && exit 1)
 ensure_updated_npm_through_nvm || (echo "Something went wrong installing nodejs for neovim" && exit 1)
@@ -204,7 +205,6 @@ clone_config_and_inject
 inject_python_intepreter_to_init_file
 add_paths
 install_neovim_plugins
-echo "----------------" >> "$rc_file"
 
 cd "$REPO_DIR" || exit 1
 nvim -c "VIMRC"
