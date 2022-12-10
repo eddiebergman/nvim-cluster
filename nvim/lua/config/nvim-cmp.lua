@@ -1,6 +1,14 @@
 local self = {}
 local cmp = require('cmp')
 
+local function completion(fallback)
+    if cmp.visible() then
+        cmp.confirm({ select = true, behavior = cmp.ConfirmBehavior.Replace })
+    else
+        fallback()
+    end
+end
+
 local kind_icons = {
     Text = "",
     Method = "m",
@@ -36,49 +44,18 @@ local cmp_config = {
     },
     mapping = {
         ['<C-e>'] = cmp.mapping.close(),
-        ['<A-j>'] = cmp.mapping(
-            function(fallback)
-                if cmp.visible() then
-                    cmp.select_next_item()
-                else
-                    fallback()
-                end
-            end
-        ),
-        ['<A-k>'] = cmp.mapping(
-            function(fallback)
-                if cmp.visible() then
-                    cmp.select_prev_item()
-                else
-                    fallback()
-                end
-            end
-        ),
-        ['<Tab>'] = cmp.mapping(
-            function(fallback)
-                if cmp.visible() then
-                    cmp.confirm({ select = true })
-                else
-                    fallback()
-                end
-            end
-        ),
-        ['<CR>'] = cmp.mapping(
-            function(fallback)
-                if cmp.visible() then
-                    cmp.confirm({ select = true })
-                else
-                    fallback()
-                end
-            end
-        ),
+        ['<A-j>'] = cmp.mapping(cmp.mapping.select_next_item(), { 'i', 'c' }),
+        ['<A-k>'] = cmp.mapping(cmp.mapping.select_prev_item(), { 'i', 'c' }),
+        ['<Tab>'] = cmp.mapping(completion),
+        ['<CR>'] = cmp.mapping(completion),
     },
-    experimental = { ghost_text = true, },
+    experimental = { ghost_text = true, native_menu = false },
     formatting = {
         fields = { "abbr", "kind" },
         format = function(_, vim_item)
             local icon = kind_icons[vim_item.kind]
             vim_item.kind = string.format("%s %s", icon, vim_item.kind)
+            vim_item.dup = 0 -- Remove duplicate entries
             return vim_item
         end,
     },
@@ -93,6 +70,12 @@ local cmp_config = {
             {name = 'buffer' },
         }
     ),
+
+    window = {
+        completion = cmp.config.window.bordered(),
+        documentation = cmp.config.window.bordered(),
+    },
+
     sorting = {
         comparators = {
             require("cmp-under-comparator").under,
