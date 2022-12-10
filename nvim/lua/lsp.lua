@@ -43,7 +43,11 @@ function M.setup()
                     },
                 },
                 before_init = function(_, config)
-                    config.settings.python.pythonPath = require("util").get_python_path(config.root_dir)
+                    local penv = require("util").python_env({ patterns = { "venv", ".venv", "env", ".env" } })
+                    if penv == nil then
+                        return
+                    end
+                    config.settings.python.pythonPath = penv.python
                 end,
                 capabilities = capabilities,
                 on_attach = M.breadcrumbs_attach,

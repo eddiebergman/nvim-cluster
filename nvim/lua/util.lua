@@ -59,30 +59,63 @@ function M.setsign(opts)
     })
 end
 
-function M.get_python_path(workspace)
-    -- Use activated virtualenv.
+function M.python_env(opts)
+    -- This will use the following strategies, in order to determine the python env
+    -- 1. VIRTUAL_ENV
+    -- 2. CONDA_DEFAULT_ENV
+    -- 3. If opts.patterns are provided for virtual env names are passed, then search for those
+    --      This will use the `vim.fn.getcwd()` or override with `opts.root`.
+    --      If several matches are found for a pattern, it will take the first, giving priority
+    --      to the first patterns in the list.
+    -- If none of these are found, this will fail and return nil
+
     local util = require("lspconfig/util")
     local path = util.path
+    local join = path.join
 
+    local bindir = nil
+
+    -- 1. Use virtualenv if present
     if vim.env.VIRTUAL_ENV then
-        return path.join(vim.env.VIRTUAL_ENV, "bin", "python")
+        bindir = join(vim.env.VIRTUAL_ENV, "bin")
+        return { python = join(bindir, "python"), bindir = bindir }
     end
 
-    if vim.env.CONDA_PYTHON_EXE then
-        return vim.env.CONDA_PYTHON_EXE
+    -- 2. Use conda env if present
+    if vim.env.CONDA_DEFAULT_ENV then
+        bindir = join(vim.env.CONDA_DEFAULT_ENV, "bin")
+        return { python = join(bindir, "python"), bindir = bindir }
     end
 
-    -- Find and use virtualenv in workspace directory.
-    for _, pattern in ipairs({ "*", ".*" }) do
-        local match = vim.fn.glob(path.join(workspace or vim.fn.getcwd(), pattern, "pyvenv.cfg"))
-        if match ~= "" then
-            return path.join(path.dirname(match), "bin", "python")
+
+    -- 3. Search for patterns from root or workspace
+    if opts.patterns then
+        -- Find and use virtualenv in workspace directory.
+        local root = opts.root or vim.fn.getcwd()
+        for _, pattern in ipairs(opts.patterns) do
+            local matches = vim.fn.glob(join(root, pattern), true, true)
+            local _, env = next(matches)
+            if env and path.exists(join(env, "python")) then
+                bindir = join(env, "bin")
+            end
+        end
+        if bindir then
+            return { python = join(bindir, "python"), bindir = bindir }
         end
     end
 
-    -- Fallback to system Python.
-    return vim.fn.exepath("python3") or vim.fn.exepath("python") or "python"
+    -- 4. No python env found, try to use system python
+    local pythonpath = vim.fn.exepath("python3") or vim.fn.exepath("python") or nil
+    if pythonpath then
+        return { python = pythonpath, bindir = path.dirname(pythonpath) }
+    end
+
+    return nil
 end
--- banana
+
+function M.lsp_root(patterns)
+    local cwd = vim.fn.getcwd()
+    return require("lspconfig").util.root_pattern(unpack(patterns))(cwd)
+end
 
 return M

@@ -2,25 +2,43 @@ local M = {}
 local builtins = require("null-ls.builtins")
 local diagnostics = builtins.diagnostics
 local formatting = builtins.formatting
+local util = require("util")
 
--- banana
+function M.find_local(language)
+    if language == "python" then
+        -- Will attempt to find your python env using VirtualEnv, Conda or virtual env patterns
+        local python_env = util.python_env({ patterns = { "venv", ".venv", "env", ".env" } })
+        if not python_env then
+            return nil
+        end
+
+        local rootdir = util.lsp_root({
+            ".git", "setup.py", "requirements.txt", "poetry.lock", "Pipfile", "Pipfile.lock",
+            "pyproject.toml", "setup.cfg", "tox.ini", "mypy.ini", "pylintrc",
+        })
+        return python_env.bindir:gsub(rootdir, "")
+    end
+end
 
 function M.setup()
+    local python = M.find_local("python")
+
     require("null-ls").setup({
         debug = true, -- :NullLsLog to get the log if deubg is on
         sources = {
-            diagnostics.ruff, -- python linter
-            diagnostics.mypy, -- python type checking
-            diagnostics.actionlint, -- github action linter
+            diagnostics.ruff.with({ prefer_local = python }), -- python linter
+            diagnostics.mypy.with({ prefer_local = python }), -- python type checking
+            formatting.black.with({ prefer_local = python }), -- python formatter
             diagnostics.flake8.with({ -- Flake8 only if `.flake8` found
-                condition = function(util) return util.root_has_file({ ".flake8" }) end
+                prefer_local = python,
+                condition = function(u) return u.root_has_file({ ".flake8" }) end,
             }),
+            --diagnostics.pylint.with({ prefer_local = local_binary_dir}), -- Disabled, enable if you like
+            --formatting.isort.with({ prefer_local = local_binary_dir}), -- Disabled, enable if you like
             --diagnostics.commitlint, -- If using commitizen
-            --diagnostics.pylint, -- Disabled, enable if you like
-            --formatting.isort, -- Disabled, enable if you like
+            diagnostics.actionlint, -- github action linter
             diagnostics.yamllint, -- yaml linter
             formatting.yamlfmt, -- yaml formatter
-            formatting.black, -- python formatter
             formatting.clang_format, -- c/c++ formatter
             formatting.jq, -- json formatter
             formatting.shfmt, -- shell formatter
