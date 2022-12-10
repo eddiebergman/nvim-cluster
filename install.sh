@@ -171,7 +171,10 @@ backup_existing_configs () {
 install_neovim_plugins () {
 	# Install neovim
 	nvim --headless -c "autocmd User PackerComplete quitall" -c "PackerSync"
-	nvim --headless -c "TSInstallSync lua python query json markdown markdown_inline diff gitcommit gitignore help make bash regex toml vim yaml git_rebase" -c q
+	nvim --headless -c "LspInstall sumneko_lua bashls yamlls taplo esbonio marksman pyright jsonls clangd" \
+    -c "MasonInstall ruff mypy actionlint flake8 yamllint yamlfmt black clang-format jq shfmt" \
+    -c "TSInstallSync lua python query json markdown markdown_inline diff gitcommit gitignore help make bash regex toml vim yaml git_rebase" \
+    -c qa
 }
 
 add_paths () {
@@ -207,5 +210,13 @@ inject_python_intepreter_to_init_file
 add_paths
 install_neovim_plugins
 
-cd "$REPO_DIR" || exit 1
-nvim -c "VIMRC"
+echo
+echo "======================="
+echo "Successfully Installed!"
+echo "Please start a new shell, and run the following to learn more about"
+echo "the plugins and features of this setup!"
+echo 
+echo "cd $NVIM_CONFIG_PATH"
+echo "nvim init.lua"
+echo
+echo "======================="

@@ -1,15 +1,10 @@
 local M = {}
+require("nvim-treesitter.install")
 
 function M.setup()
     local config = require("nvim-treesitter.configs")
 
     config.setup({
-        ensure_installed = {
-            "lua", "python", "query", "json", "rst", "markdown", "markdown_inline", "diff",
-            "gitcommit", "gitignore", "help", "make", "bash", "regex", "toml", "vim", "yaml",
-            "git_rebase"
-        },
-
         highlight = { enable = true },
 
         indent = { enable = true },
