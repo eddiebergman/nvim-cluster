@@ -30,7 +30,7 @@ function M.get_diagnostic_text()
     for name, info in pairs(items) do
         table.insert(text, "%#"..name.."#"..info.sign.." "..info.count)
     end
-    return table.concat(text, "")
+    return table.concat(text, " ")
 end
 
 
