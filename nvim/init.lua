@@ -103,6 +103,7 @@ vim.cmd([[filetype plugin indent on]])
 -- `,h` to figure out what they are
 -- <Alt-j> pass these if you like
 vim.o.termguicolors = true
+vim.o.clipboard = "unnamedplus"
 vim.o.backspace = "indent,eol,start"
 vim.o.breakindent = true
 vim.o.completeopt = "menuone,noselect,menu"
