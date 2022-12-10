@@ -90,10 +90,6 @@ local function plugins(use)
         config = function() require("config/null-ls").setup() end
     })
 
-    -- Virtual-types
-    -- Get information about types of things inline as virtual text
-    use("jubnzv/virtual-types.nvim")
-
     -- Completion
     -- Suggestions as you type
     use({
@@ -116,7 +112,6 @@ local function plugins(use)
         requires = "neovim/nvim-lspconfig",
         config = function () require("config/nvim-navic").setup() end
     })
-
 
     -- Treesitter
     -- Language aware syntax tree and associated plugins
@@ -150,9 +145,6 @@ local function plugins(use)
 
     -- Smarter repeats with `.`
     use("tpope/vim-repeat")
-
-    -- Autoclose brackets
-    use("townk/vim-autoclose")
 
     -- Snippets
     use("L3MON4D3/LuaSnip")
