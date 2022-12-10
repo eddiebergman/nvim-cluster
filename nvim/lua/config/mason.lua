@@ -13,7 +13,9 @@ M.lsp_servers = {
 }
 
 function M.setup()
-    require("mason").setup()
+    require("mason").setup({
+        PATH = "append", -- Ensure we prefer local binaries if installed
+    })
     require("mason-lspconfig").setup({ ensure_installed = M.lsp_servers })
 end
 
