@@ -13,6 +13,8 @@ vim.g.python3_host_prog = 'REPLACE_ME'
 -- everything after it a command line command and the '%' is shorthand for the
 -- current file.
 
+-- If you dont like this theme by the way, hit `M` a few times (<shift-m>)
+
 -- First you are used to `h`,`j`,`k`,`l` to navigate
 -- I've also set `H` and `L` (shift-h, shift-l) to go to the start and end of line
 -- Give it a go
@@ -24,7 +26,8 @@ vim.g.python3_host_prog = 'REPLACE_ME'
 
 -- To also save your poor wrist from hitting `<esc>` to exit insert mode, i've mapped
 -- `jk` to `<esc>` so you can enter insert mode (`i`) and get back to normal mode by
--- just rolling your fingers on `jk`. "red green bl"
+-- just rolling your fingers on `jk`.
+--          complete me and try -> red green bl
 
 -- I assume you know some basic but here's a dump of handy movement things to try
 --  <Ctrl-o>        - jump back up the stack of places you've been
@@ -36,9 +39,9 @@ vim.g.python3_host_prog = 'REPLACE_ME'
 --  `f<key>`        - motion to the next occurence of a <key>   |                 z
 --  `df<key>`       - delete until the next occurence of a key. |     lallal      z
 --  `w`             - Move one word forward
---  `dw`            - Delete until the end of the word          |         nice_lasldasdas
---  `diw`           - More helpfully, delete [i]nside [w]ord    | this is `barbeque` also nice
---  `di(`           - Similarly, delete inside brackets ()      | def func(i_dont_want_this_param)
+--  `dw`            - Delete until the end of the word          |         nice_delete_this_but_leave_nice
+--  `diw`           - More helpfully, delete [i]nner [w]ord     | this is delete_me also nice
+--  `di(`           - Similarly, delete inside brackets ()      | def func()
 --                      you can also use [], {}, "", ''         | [hi] "hi" 'hi' {hi}
 --  `da(`           - Similar but also delete the surrounding   | [hi] "hi" 'hi' {hi}
 --                      stuff
@@ -60,10 +63,11 @@ vim.g.python3_host_prog = 'REPLACE_ME'
 -- I've also made `<space>` toggle the fold you're currently on/in
 
 -- Neovim is configured with simple arcane lua instead of the complex arcane vimscript
--- this is how you set a variable, sort of, I've mapped `<ctrl-space>` to jump to the next
--- diagnostic in a file. Fix the first variable using the second as a reference then
--- delete them both (`dd` on the line)
+-- this is how you set a variable, sort of.
 hi = "hello"
+-- I've mapped `<ctrl-space>` to jump to the next diagnostic in a file.
+-- Fix the first variable using the second as a reference then
+-- delete them both (`dd` on the line)
 local good = "sure"
 
 -- This is a dictionary (lua calls em tables)
@@ -78,7 +82,7 @@ local mylist = { "its", "actually", "a", "dictionary", "with", "indices", "as", 
 local function myfunc(arg1, arg2)
     -- With a loop inside
     for key, value in pairs(mydict) do
-        print(key .. value) -- Any joining a string with `..`
+        print(key .. value) -- And joining a string with `..`
     end
 end
 
@@ -147,8 +151,7 @@ vim.o.wrap = false
 vim.o.foldmarker = "{{{,}}}"
 vim.o.foldmethod = "expr"
 vim.o.foldexpr = "nvim_treesitter#foldexpr()"
-vim.o.foldlevel = 99
-vim.o.foldcolumn = '0' -- '0' is not bad
+vim.o.foldcolumn = '0'
 vim.o.foldenable = false
 vim.o.showtabline = 0
 vim.cmd([[ set foldopen-=block ]])
@@ -160,7 +163,7 @@ vim.cmd([[ set foldcolumn=0 ]]) -- Not sure why this doesn't work with `vim.o`
 local setkey = require("util").setkey
 local command = require("util").command
 
--- POI
+-- NOTE:
 -- This is the key marked as `<leader>` in some keymaps below
 -- Wherever i said to use `,` like in `,h`, this is actually mapped as `<leader>h`
 -- Choose your fighter...
@@ -179,6 +182,8 @@ setkey({ key = "<A-k>", cmd = "{" })
 setkey({ key = "<A-j>", cmd = "}" })
 
 -- Smart selection <A-l>, <A-h>
+-- This is actually configured in ./lua/config/treesitter.lua
+-- You can hit `gf` on the file path above to go to the file
 
 -- Toggle fold
 setkey({ key = "<space>", cmd = "za" })
@@ -205,18 +210,29 @@ setkey({ key = "<leader>fmm", cmd = ":set foldmethod=marker<CR>" })
 setkey({ key = "<leader>fmi", cmd = ":set foldmethod=indent<CR>" })
 setkey({ key = "<leader>fme", cmd = ":set foldmethod=expr<CR>" })
 
+-- NOTE:
+-- Now's probably a good time to talk about auto-completion
+-- There are different source of things to autocomplete. If you start
+-- typing now, you'll see completions offered by the `Text` source.
+-- When typing code, you'll see `functions`, `methods`, `variables` etc...
+-- These will get preference over just raw text.
+-- ---
+-- One such source to try out is the `path` srouce which tries to auto complete paths
+-- Go to the line below and start inserting `./`. You can use `<A-j>` and `<A-k>` When
+-- this window is open to cycle selections. You can press `<Tab>` or `<enter>` to select
+
+
 -- Only if you're feeling spicy, disable arrow keys
 -- setkey({ key="<left>", cmd="<nop>" })
 -- setkey({ key="<right>", cmd="<nop>" })
 -- setkey({ key="<up>", cmd="<nop>" })
 -- setkey({ key="<down>", cmd="<nop>" })
 
--- POI
--- Toggle file explorer, I use Ctrl+h because it's a window that pops out of the left
--- Navigate using j,k to go up and down and l,h to go deeper or out
--- l on a file will just open the file
--- Go to ./nvim-cluster/nvim/lua/config/nvim-tree.lua
--- You can also search with `/nvim-tree`
+-- NOTE:
+-- Toggle file explorer, I use `<C-h>` because it's a window that pops out of the left
+-- Navigate up down using `j`, `k` to go up and down and `l`, `h` to go deeper into a folder
+-- or out.
+-- `l` on a file will just open the file
 command({ key = "<C-h>", name = "ToggleTree", cmd = "NvimTreeToggle", })
 
 -- [e]dit [v]imrc
@@ -226,16 +242,18 @@ command({ key = "<leader>ev", name = "VIMRC", cmd = "e $MYVIMRC" })
 -- Find a file with fuzzy find (Ctrl+P was a vanilla vim plugin, the hotkey stuck)
 command({ key = "<C-p>", name = "FindFile", cmd = function () require("telescope.builtin").find_files({ hidden = true }) end })
 
--- POI
+-- NOTE:
 -- This is bread and butter when you have to just find some string, try find all
 -- the occurences of `banana`
 -- When you have typed `banana` into the search bar, press `<C-l>`
+-- If you're not familiar with switching panes, use `<C-w>+direction` to jump to that
+-- window.
 -- [s]earch [s]tring
 command({ key = "<leader>ss", name = "FindString", cmd = "Telescope live_grep", })
 -- Use `<Ctrl-p>` to find `telescope.lua` and see how it's configured
 
 
--- POI
+-- NOTE:
 -- Find a command
 -- You may have thought by know, how the hell should I remeber all this... dont.
 -- Remember a keyword and use `<C-f>` to find a command and run it. If you use it
@@ -246,7 +264,7 @@ command({ key = "<C-f>", name = "FindCommand", cmd = "Telescope commands" })
 
 
 -- Diagnostics
--- POI
+-- NOTE:
 -- Jump to next
 command({ key = "<c-space>", name = "NextDiagnostic", cmd = "lua vim.diagnostic.goto_next()" })
 -- [s]how [e]rror on current line
@@ -256,18 +274,22 @@ i_am_error = "rawr"
 command({ key = "<C-d>", name = "DiagnosticsList", cmd = "TroubleToggle workspace_diagnostics", })
 
 -- Language smarts
--- Ctrl + [F]ormat
+-- [f]ormat
 command({ key = "<leader>f", name = "Format", cmd = "lua vim.lsp.buf.format()" })
 local all_over_the_place = {
     one =     "two",      three = "four"
 }
 
 -- [r]ename (only on current buffer)
+-- Another common practice is search for the word with `/`, use `ciw` to changed
+-- the word to what you want and then use `n` to jump to the next occurence of the
+-- word and `.` to apply the same change again, it's more manual but less error prone
 command({ key = "<leader>r", name = "Rename", cmd = "lua vim.lsp.buf.rename()", })
 local XX = "YY"
 local ZZ = XX..XX
 
--- POI
+-- NOTE:
+-- You can try these out on the function `defintion` below
 -- [s]how [d]efinition
 command({ key = "sd", name = "Definition", cmd = "lua vim.lsp.buf.hover()", })
 -- [g]o [d]efinition
@@ -286,32 +308,34 @@ definition(3, "hi")
 
 -- Alt + Enter (CodeActions is not as good as pycharm right now)
 -- It'll be a while before pycharm level code actions get here
+-- For non-python languages, you'll often have useful actions
 command({ key = "<A-cr>", name = "CodeActions", cmd = "lua vim.lsp.buf.code_action()", })
 
--- POI
--- Find a symbol (may consider `lsp_document_symbols`)
+-- NOTE:
+-- Find a symbol (may consider `lsp_document_symbols` instead)
 command({ key = "<leader>S", name = "SearchSymbolDoc", cmd = "Telescope lsp_workspace_symbols", })
 
--- POI
+-- NOTE:
 -- Git
 -- I really like how simple but fleshed out git is here
--- Add a line somewhere, use `<leader>gs` and use the keys `a` to add a file
--- and `=` to expand the changes in that files. You can also expand and 
--- commit individual hunks instead of the entire file.
---
+-- Add a line somewhere, use `<leader>gs`, hover over the file:
+--      * use `=` to view the changes in that files.
+--      * use `a` to add the file
+--      * use `X` to revert the file
+--      * ... the whole list is found under `:help fugitive-maps`
+--      * I sometimes use `ce` with staged changes to ammend a commit with something I forgot
+-- You can also expand and commit individual hunks instead of the entire file.
+-- ---
 -- Once you've added something, press `<leader>gc``
---
 -- This will open up a little buffer where you can type your commit message
 -- There is syntax highlighting for conventional-commits
---
+-- ---
 --              type(context): short message sort of
---
+-- ---
 --              Longer description can go down here with whatever else
 --              is needed
---
+-- ---
 -- Finally you can use `<leader>gp` to push any staged changes
--- There are much more things it can do  `:help fugitive-maps`
--- I sometimes use `ce` to ammend a commit with something I forgot to stage
 command({ key = "<leader>gs", name = "GitStatus", cmd = "vertical bo Git" })
 command({ key = "<leader>gc", name = "GitCommit", cmd = "Git commit" })
 command({ key = "<leader>gp", name = "GitPush", cmd = "Git push" })
@@ -337,6 +361,7 @@ command({ key = "gr", name = "GitResetHunk", cmd = "Gitsigns reset_hunk" })
 command({ key = "gA", name = "GitAddFile", cmd = "Gitsigns stage_buffer" })
 
 -- See who commited what!
+command({ key = "<leader>tb", name = "ToggleBlame", cmd = "Gitsigns toggle_current_line_blame" })
 -- Delete a line and use `<leader>td` to toggle see what's been deleted, (`u` to undo)
 command({ key = "<leader>td", name = "ToggleDeletedGit", cmd = "Gitsigns toggle_deleted" })
 
@@ -345,13 +370,13 @@ command({ key = "<leader>tl", name = "ToggleLineGit", cmd = "Gitsigns toggle_lin
 -- command({ key = "gR", name = "GitResetFile", cmd = "Gitsigns reset_buffer" }) -- careful
 --
 
--- POI
+-- NOTE:
 -- Symbols, hit `<C-s>` to see all the large symbols in this file to navifate quickly
 -- There won't be much here but it's a great way to quickly navigate a large python file
 -- with classes and functions
 command({ key = "<C-s>", name = "Symbols", cmd = "AerialToggle" })
 
--- POI
+-- NOTE:
 -- Toggle a terminal :) Use `<Alt-t>` to toggle it while `exit` or `:q` to exit it
 command({ key = "<A-t>", name = "Terminal", cmd = "ToggleTerm" })
 
@@ -375,20 +400,20 @@ if vim.env.VIRTUAL_ENV == nil and vim.env.CONDA_PYTHON_EXE then
     vim.env.VIRTUAL_ENV = vim.env.CONDA_PYTHON_EXE
 end
 
--- POI
+-- NOTE:
 -- At this point, you're on you own
 -- Feel free to explore what's here.
 -- Most plugin configurations are in `nvim/lua/config`
 -- You can search up and read about `Packer`, the plugin manager
 -- if you want to add/delete more.
---
+-- ---
 -- If you want to create your own nvim config setup and have it
 -- on git, then you'll need everuthing under the `nvim` folder
 -- which I smybolic linked to `$HOME/.config/nvim`. You may
 -- want to read through the `install.sh` script in this repo
 -- to see that setup steps that were performed as it's usually
 -- a bit more of a tedious once-off process to get right.
---
+-- ---
 -- If you need more language tools, type `:Mason`, you will likely
 -- need to go to `null_ls.lua` or `lsp.lua` to set them up once installed.
 -- You can hit `gd` on any of these to see what's going on but you don't
@@ -398,7 +423,7 @@ require("plugins").setup() -- Keep this first
 require("lsp").setup() -- Language smarts
 -- }}}
 -- {{{ Theme
--- POI
+-- NOTE:
 -- I've just chosen this one, it's installed in `plugins.lua`
 -- how you can install new ones
 -- Use `M` to toggle some differnt onedark styles
