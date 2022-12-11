@@ -37,7 +37,6 @@ function M.setup()
             --formatting.isort.with({ prefer_local = local_binary_dir}), -- Disabled, enable if you like
             --diagnostics.commitlint, -- If using commitizen
             diagnostics.actionlint, -- github action linter
-            diagnostics.yamllint, -- yaml linter
             formatting.yamlfmt, -- yaml formatter
             formatting.clang_format, -- c/c++ formatter
             formatting.jq, -- json formatter
