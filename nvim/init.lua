@@ -152,17 +152,6 @@ vim.o.foldenable = false
 vim.o.showtabline = 0
 vim.cmd([[ set foldopen-=block ]])
 vim.cmd([[ set foldcolumn=0 ]]) -- Not sure why this doesn't work with `vim.o`
-
--- POI
--- At this point, I'll just walk through what's here in their semi random order
--- you can find each point of interest using `/POI`
--- These are the little diagnostic signs that pop up, feel free to the `sign`
-local setsign = require("util").setsign
-setsign({ name = 'DiagnosticSignError', sign = '' })
-setsign({ name = 'DiagnosticSignWarn', sign = '' })
-setsign({ name = 'DiagnosticSignHint', sign = '' })
-setsign({ name = 'DiagnosticSignInfo', sign = '' })
-
 -- }}}
 
 
@@ -234,7 +223,7 @@ command({ key = "<leader>ev", name = "VIMRC", cmd = "e $MYVIMRC" })
 
 -- Find Things
 -- Find a file with fuzzy find (Ctrl+P was a vanilla vim plugin, the hotkey stuck)
-command({ key = "<C-p>", name = "FindFile", cmd = "Telescope find_files", })
+command({ key = "<C-p>", name = "FindFile", cmd = function () require("telescope").find_files({hidden = true}) end })
 
 -- POI
 -- This is bread and butter when you have to just find some string, try find all
@@ -353,6 +342,17 @@ command({ key = "<leader>td", name = "ToggleDeletedGit", cmd = "Gitsigns toggle_
 -- Try it out with some modifications in the buffer
 command({ key = "<leader>tl", name = "ToggleLineGit", cmd = "Gitsigns toggle_linehl" })
 -- command({ key = "gR", name = "GitResetFile", cmd = "Gitsigns reset_buffer" }) -- careful
+--
+
+-- POI
+-- Symbols, hit `<C-s>` to see all the large symbols in this file to navifate quickly
+-- There won't be much here but it's a great way to quickly navigate a large python file
+-- with classes and functions
+command({ key = "<C-s>", name = "Symbols", cmd = "AerialToggle" })
+
+-- POI
+-- Toggle a terminal :) Use `<Alt-t>` to toggle it while `exit` or `:q` to exit it
+command({ key = "<A-t>", name = "Terminal", cmd = "ToggleTerm" })
 
 -- }}}
 
@@ -390,6 +390,9 @@ end
 --
 -- If you need more language tools, type `:Mason`, you will likely
 -- need to go to `null_ls.lua` or `lsp.lua` to set them up once installed.
+-- You can hit `gd` on any of these to see what's going on but you don't
+-- need to
+require("signs").setup()
 require("plugins").setup() -- Keep this first
 require("lsp").setup() -- Language smarts
 -- }}}
@@ -397,6 +400,7 @@ require("lsp").setup() -- Language smarts
 -- POI
 -- I've just chosen this one, it's installed in `plugins.lua`
 -- how you can install new ones
+-- Use `M` to toggle some differnt onedark styles
 vim.cmd("colorscheme onedark")
 vim.api.nvim_set_hl(0, "Folded", { fg = "#fa8f02", bg = "NONE", italic = true })
 -- }}}

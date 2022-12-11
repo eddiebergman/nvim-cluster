@@ -21,7 +21,7 @@ local function plugins(use)
         config = function() require("config/mason").setup() end
     })
 
-    -- Telescope 
+    -- Telescope
     -- The popup window that lets you select files
     use({
         'nvim-telescope/telescope.nvim',
@@ -66,7 +66,7 @@ local function plugins(use)
         "nvim-lualine/lualine.nvim",
         requires = {
             "arkav/lualine-lsp-progress",
-            {'kyazdani42/nvim-web-devicons', opt = true},
+            { 'kyazdani42/nvim-web-devicons', opt = true },
         },
         config = function() require("config/lualine").setup() end
     })
@@ -76,14 +76,14 @@ local function plugins(use)
     -- Nice git utilities for changes to a file
     use({
         "lewis6991/gitsigns.nvim",
-        config = function () require("config/gitsigns").setup() end
+        config = function() require("config/gitsigns").setup() end
     })
 
     -- Ident-Blankline
     -- Gives the indent lines
     use({
         "lukas-reineke/indent-blankline.nvim",
-        config = function () require("config/indent-blankline").setup() end
+        config = function() require("config/indent-blankline").setup() end
     })
     -- Null-ls
     -- Allows linters/checkers/tools to hook into neovims lsp system
@@ -101,7 +101,7 @@ local function plugins(use)
             "hrsh7th/cmp-nvim-lsp", -- For LSP completions
             "hrsh7th/cmp-buffer", -- For buffer content completion
             "hrsh7th/cmp-path", -- For path completion
-            "lukas-reineke/cmp-under-comparator",  -- Deprioritize double underscore in python
+            "lukas-reineke/cmp-under-comparator", -- Deprioritize double underscore in python
             "windwp/nvim-autopairs", -- Autopair brackets on function completion
             "hrsh7th/cmp-nvim-lsp-signature-help", -- Signature help as you fill in functions
             "saadparwaiz1/cmp_luasnip",
@@ -113,7 +113,7 @@ local function plugins(use)
     use({
         "SmiteshP/nvim-navic",
         requires = "neovim/nvim-lspconfig",
-        config = function () require("config/nvim-navic").setup() end
+        config = function() require("config/nvim-navic").setup() end
     })
 
     -- Treesitter
@@ -131,6 +131,33 @@ local function plugins(use)
         },
         config = function() require("config/treesitter").setup() end,
         run = ":TSUpdate"
+    })
+
+    -- nvim-notify
+    -- Get nice notification messages
+    use({
+        "rcarriga/nvim-notify",
+        config = function() require("config/nvim-notify").setup() end
+    })
+
+    -- TodoComments
+    -- Highlight TODOs, and comments
+    use({
+        "folke/todo-comments.nvim",
+        requires = "nvim-lua/plenary.nvim",
+        config = function() require("config/todo-comments").setup() end
+    })
+
+    -- Symbol outline
+    use({
+        "stevearc/aerial.nvim",
+        config = function() require("config/aerial").setup() end
+    })
+
+    -- Terminal
+    use({
+        "akinsho/nvim-toggleterm.lua",
+        config = function() require("config/toggleterm").setup() end
     })
 
     -- Luapad
@@ -161,11 +188,11 @@ end
 
 function M.ensure_installed()
     local fn = vim.fn
-    local install_path = fn.stdpath('data')..'/site/pack/packer/start/packer.nvim'
+    local install_path = fn.stdpath('data') .. '/site/pack/packer/start/packer.nvim'
     if fn.empty(fn.glob(install_path)) > 0 then
-      fn.system({'git', 'clone', '--depth', '1', 'https://github.com/wbthomason/packer.nvim', install_path})
-      vim.cmd [[packadd packer.nvim]]
-      return true
+        fn.system({ 'git', 'clone', '--depth', '1', 'https://github.com/wbthomason/packer.nvim', install_path })
+        vim.cmd [[packadd packer.nvim]]
+        return true
     end
     return false
 end

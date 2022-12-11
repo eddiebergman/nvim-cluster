@@ -11,7 +11,6 @@ NVIM_PACKAGE="https://github.com/neovim/neovim/releases/download/$NVIM_VERSION/n
 NVIM_TAR="$INSTALL_DIR/nvim-linux64.tar.gz"
 NVIM_DIR="$INSTALL_DIR/nvim-linux64"
 NVIM_BINARY_DIR="$NVIM_DIR/bin"
-NVIM_BINARY="$NVIM_BINARY_DIR/nvim"
 
 CONFIG_DIR="$HOME/.config"
 NVIM_CONFIG_PATH="$CONFIG_DIR/nvim"

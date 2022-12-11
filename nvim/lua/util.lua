@@ -118,4 +118,5 @@ function M.lsp_root(patterns)
     return require("lspconfig").util.root_pattern(unpack(patterns))(cwd)
 end
 
+
 return M
