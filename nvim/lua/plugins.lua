@@ -5,6 +5,9 @@ local function plugins(use)
 
     -- https://github.com/topics/neovim-colorscheme?o=desc&s=stars
     use('folke/tokyonight.nvim')
+    use({
+        "navarasu/onedark.nvim", config = function() require("config/onedark").setup() end
+    })
 
     -- Mason
     -- Easy setup of many language specific tools and LSP servers to give "smarts" to the editor

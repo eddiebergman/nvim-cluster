@@ -163,15 +163,6 @@ setsign({ name = 'DiagnosticSignWarn', sign = '' })
 setsign({ name = 'DiagnosticSignHint', sign = '' })
 setsign({ name = 'DiagnosticSignInfo', sign = '' })
 
--- POI
--- I've just chosen this one, we'll see in the `plugins` section
--- how you can install new ones
-vim.cmd([[
-    try
-        colo tokyonight-storm
-    catch
-	    colo default
-]])
 -- }}}
 
 
@@ -401,6 +392,13 @@ end
 -- need to go to `null_ls.lua` or `lsp.lua` to set them up once installed.
 require("plugins").setup() -- Keep this first
 require("lsp").setup() -- Language smarts
+-- }}}
+-- {{{ Theme
+-- POI
+-- I've just chosen this one, it's installed in `plugins.lua`
+-- how you can install new ones
+vim.cmd("colorscheme onedark")
+vim.api.nvim_set_hl(0, "Folded", { fg = "#fa8f02", bg = "NONE", italic = true })
 -- }}}
 --
 --
