@@ -223,7 +223,7 @@ command({ key = "<leader>ev", name = "VIMRC", cmd = "e $MYVIMRC" })
 
 -- Find Things
 -- Find a file with fuzzy find (Ctrl+P was a vanilla vim plugin, the hotkey stuck)
-command({ key = "<C-p>", name = "FindFile", cmd = function () require("telescope").find_files({hidden = true}) end })
+command({ key = "<C-p>", name = "FindFile", cmd = function () require("telescope.builtin").find_files({ hidden = true }) end })
 
 -- POI
 -- This is bread and butter when you have to just find some string, try find all
