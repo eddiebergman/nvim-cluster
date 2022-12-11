@@ -19,7 +19,8 @@ vim.g.python3_host_prog = 'REPLACE_ME'
 
 -- Great we've got speedy left to right movement, for speedy up and down movement
 -- you can use the keys `{` and `}` or i've also mapped <alt-j> and <alt-k>, it moves
--- a block at a time.
+-- a block at a time. If this doesnt work for you, it may be because your terminal emulator
+-- is blocking them, feel free to change the keys once you come across them in this tutorial.
 
 -- To also save your poor wrist from hitting `<esc>` to exit insert mode, i've mapped
 -- `jk` to `<esc>` so you can enter insert mode (`i`) and get back to normal mode by
